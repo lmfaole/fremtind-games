@@ -25,6 +25,9 @@ pnpm dev
 | `pnpm dev`       | Utviklingsserver på http://localhost:3000    |
 | `pnpm build`     | Statisk eksport til `out/`                   |
 | `pnpm typecheck` | Typesjekk uten å bygge                       |
+| `pnpm format`    | Formater med Prettier (`format:check` sjekker bare) |
+| `pnpm check`     | Validerer spørsmålene i `src/quiz/questions.ts` |
+| `pnpm verify`    | Typesjekk, formatsjekk og spørsmålssjekk     |
 
 ## Oppsett
 

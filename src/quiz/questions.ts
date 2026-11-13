@@ -65,7 +65,7 @@ export const isCorrect = (question: Question, value: string[]) => {
     }
 };
 
-const allQuestions: Question[] = [
+export const allQuestions: Question[] = [
     {
         type: "choice",
         id: "abba",
