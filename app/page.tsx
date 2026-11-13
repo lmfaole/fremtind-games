@@ -1,16 +1,18 @@
 // Jøkul 6.1.0-next.7 har ingen "use client"-direktiver, så komponentene kan ikke
 // rendres i en Server Component.
 "use client";
-import { Button } from "@fremtind/jokul/button";
+import { ButtonGroup } from "@fremtind/jokul/button-group";
 import { Card } from "@fremtind/jokul/card";
 import { Flex } from "@fremtind/jokul/flex";
 import { Select } from "@fremtind/jokul/select";
 import { Text, Title } from "@fremtind/jokul/typography";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
 import styles from "./page.module.scss";
 
 const Home = () => {
+    const router = useRouter();
     const [brand, setBrandState] = useState("");
 
     useEffect(() => setBrandState(readBrand()), []);
@@ -35,11 +37,13 @@ const Home = () => {
                             setBrand(event.target.value);
                         }}
                     />
-                    <Flex>
-                        <Button variant="primary" as="a" href="/quiz/1/">
-                            Start quizen
-                        </Button>
-                    </Flex>
+                    <ButtonGroup
+                        mainAction={{
+                            type: "button",
+                            children: "Start quizen",
+                            onClick: () => router.push("/quiz/1/"),
+                        }}
+                    />
                 </Flex>
             </Card>
         </main>

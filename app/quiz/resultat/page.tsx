@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@fremtind/jokul/button";
+import { ButtonGroup } from "@fremtind/jokul/button-group";
 import { Accordion, ExpandablePanel } from "@fremtind/jokul/expander";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
@@ -77,12 +77,16 @@ const ResultPage = () => {
                     );
                 })}
             </Accordion>
-            <Button variant="primary" as="a" href={smsHref}>
-                Send svar på SMS
-            </Button>
-            <Button variant="secondary" onClick={restart}>
-                Prøv igjen
-            </Button>
+            <ButtonGroup
+                mainAction={{
+                    type: "button",
+                    children: "Send svar på SMS",
+                    onClick: () => {
+                        window.location.href = smsHref;
+                    },
+                }}
+                secondaryAction={{ type: "button", children: "Prøv igjen", onClick: restart }}
+            />
         </Flex>
     );
 };
