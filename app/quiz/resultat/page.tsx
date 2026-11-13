@@ -5,18 +5,20 @@ import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isCorrect, type Question, questions } from "@/quiz/questions";
+import { isCorrect, questions } from "@/quiz/questions";
 import { clearAnswers, readAnswers } from "@/quiz/storage";
 
-const formatAnswer = (question: Question) =>
-    Array.isArray(question.answer) ? question.answer.join(", ") : String(question.answer);
+const formatAnswer = (answer: string | number | string[]) =>
+    Array.isArray(answer) ? answer.join(", ") : String(answer);
 
 const ResultPage = () => {
     const router = useRouter();
     const [score, setScore] = useState<number>();
+    const [answers, setAnswers] = useState<Record<string, string[]>>({});
 
     useEffect(() => {
         const answers = readAnswers();
+        setAnswers(answers);
         setScore(questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length);
     }, []);
 
@@ -42,7 +44,10 @@ const ResultPage = () => {
                         {questions.map((question) => (
                             <li key={question.id}>
                                 <Text subdued>{question.question}</Text>
-                                <Text>{formatAnswer(question)}</Text>
+                                <Text>
+                                    Ditt svar: {formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}
+                                </Text>
+                                <Text>Fasit: {formatAnswer(question.answer)}</Text>
                             </li>
                         ))}
                     </Flex>
