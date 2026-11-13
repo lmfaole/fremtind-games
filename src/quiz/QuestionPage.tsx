@@ -79,12 +79,7 @@ export const QuestionPage = ({ index }: { index: number }) => {
 
     return (
         <>
-            <Flex className={styles.header}>
-                <NavLink back href={index === 0 ? "/" : `/quiz/${index}/`}>
-                    {index === 0 ? "Forsiden" : "Forrige spørsmål"}
-                </NavLink>
-            </Flex>
-            <Flex as="form" direction="column" gap="l" className={styles.form} onSubmit={submit}>
+            <Flex direction="column" gap="2xs" className={styles.header}>
                 <ProgressBar
                     aria-valuenow={index + 1}
                     aria-valuemax={questions.length}
@@ -93,6 +88,13 @@ export const QuestionPage = ({ index }: { index: number }) => {
                 <Text size="s" subdued>
                     {sectionOf(question).title} · Spørsmål {index + 1} av {questions.length}
                 </Text>
+            </Flex>
+            <Flex className={styles.header}>
+                <NavLink back href={index === 0 ? "/" : `/quiz/${index}/`}>
+                    {index === 0 ? "Forsiden" : "Forrige spørsmål"}
+                </NavLink>
+            </Flex>
+            <Flex as="form" direction="column" gap="m" className={styles.form} onSubmit={submit}>
                 <Flex direction="column" gap="m" asChild>
                     <FieldGroup
                         legend={question.question}

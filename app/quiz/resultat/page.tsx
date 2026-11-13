@@ -40,7 +40,7 @@ const ResultPage = () => {
     const smsHref = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(smsBody)}`;
 
     return (
-        <Flex direction="column" gap="l" alignItems="center">
+        <Flex direction="column" gap="m" alignItems="center">
             <Title as="h1" size="l" center>
                 {score === undefined
                     ? "Regner ut resultatet …"
