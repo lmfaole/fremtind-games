@@ -145,6 +145,7 @@ export const QuestionPage = ({ index }: { index: number }) => {
                     </FieldGroup>
                 </Flex>
                 <ButtonGroup
+                    className={styles.actions}
                     mainAction={{ type: "submit", children: isLast ? "Se resultat" : "Fortsett" }}
                     secondaryAction={{ type: "button", children: "Hopp over", onClick: skip }}
                 />

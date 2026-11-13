@@ -3,3 +3,12 @@
     width: 100%;
     max-width: 30rem;
 }
+
+// Skjemaet fyller resten av skjermen, og navigasjonsknappene skyves ned til bunnen.
+.form {
+    flex: 1;
+}
+
+.actions {
+    margin-top: auto;
+}

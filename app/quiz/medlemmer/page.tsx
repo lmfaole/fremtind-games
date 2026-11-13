@@ -54,6 +54,7 @@ const MembersPage = () => {
                     />
                 ))}
                 <ButtonGroup
+                    className={styles.actions}
                     mainAction={{ type: "submit", children: "Start quizen" }}
                     secondaryAction={
                         members.length < MAX_MEMBERS

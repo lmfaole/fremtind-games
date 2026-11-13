@@ -6,6 +6,7 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isCorrect, questions, sections } from "@/quiz/questions";
+import styles from "./page.module.scss";
 import { clearAnswers, readAnswers, readMembers, readTeamName } from "@/quiz/storage";
 
 const SMS_NUMBER = "+4790713472";
@@ -46,7 +47,7 @@ const ResultPage = () => {
     const smsHref = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(smsBody)}`;
 
     return (
-        <Flex direction="column" gap="m" alignItems="center">
+        <Flex direction="column" gap="m" alignItems="center" className={styles.page}>
             <Title as="h1" size="l" center>
                 {score === undefined
                     ? "Regner ut resultatet …"
@@ -84,6 +85,7 @@ const ResultPage = () => {
                 })}
             </Accordion>
             <ButtonGroup
+                className={styles.actions}
                 mainAction={{
                     type: "button",
                     children: "Send svar på SMS",
