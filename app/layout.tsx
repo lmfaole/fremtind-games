@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { applyStoredBrandScript } from "@/brand";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -8,7 +9,10 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
-    <html lang="nb">
+    <html lang="nb" suppressHydrationWarning>
+        <head>
+            <script dangerouslySetInnerHTML={{ __html: applyStoredBrandScript }} />
+        </head>
         {/* Jøkul legger fontfamilie, sidefarge og tekstfarge på klassen `jkl`,
             ikke på `body`. Uten den arver komponenter som ikke setter egen
             font-family (NavLink, Breadcrumb, Card, Expander …) nettleserfonten. */}
