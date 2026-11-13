@@ -46,9 +46,6 @@ const ResultPage = () => {
                     ? "Regner ut resultatet …"
                     : `Du fikk ${score} av ${questions.length} riktige`}
             </Title>
-            <Text size="s" subdued center>
-                Svarene ligger i nettleserfanen, og nullstilles når du starter på nytt.
-            </Text>
             <Accordion outlined>
                 {sections.map((section) => {
                     const inSection = questions.filter((question) => question.section === section.id);
