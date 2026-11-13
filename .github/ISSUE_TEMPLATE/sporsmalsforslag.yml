@@ -1,0 +1,60 @@
+name: Spørsmålsforslag
+description: Foreslå et nytt spørsmål til quizen
+title: "Spørsmål: "
+labels: ["spørsmål"]
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Takk for at du vil bidra! Fyll ut skjemaet så godt du kan. Vi sjekker svaret mot kilden før spørsmålet legges inn.
+    - type: dropdown
+      id: seksjon
+      attributes:
+          label: Seksjon
+          description: Hvilken seksjon hører spørsmålet hjemme i?
+          options:
+              - Popkultur
+              - Historie
+              - Teknologi
+              - Naboer (Norge og Sverige)
+      validations:
+          required: true
+    - type: dropdown
+      id: type
+      attributes:
+          label: Spørsmålstype
+          options:
+              - Ett riktig svar (choice)
+              - Flere riktige svar (multi)
+              - Fritekst (text)
+              - Tall (number)
+      validations:
+          required: true
+    - type: textarea
+      id: sporsmal
+      attributes:
+          label: Spørsmål
+          placeholder: Hvilket år ble ...?
+      validations:
+          required: true
+    - type: textarea
+      id: alternativer
+      attributes:
+          label: Alternativer
+          description: Ett alternativ per linje. Hoppes over for fritekst- og tallspørsmål.
+      validations:
+          required: false
+    - type: input
+      id: svar
+      attributes:
+          label: Riktig svar
+          description: Ved flere riktige svar, skill dem med komma.
+      validations:
+          required: true
+    - type: input
+      id: kilde
+      attributes:
+          label: Kilde
+          description: Lenke eller referanse som bekrefter svaret.
+      validations:
+          required: true

@@ -1,0 +1,33 @@
+name: Feil
+description: Meld fra om noe som ikke fungerer som det skal
+title: "Feil: "
+labels: ["feil"]
+body:
+    - type: textarea
+      id: hva-skjedde
+      attributes:
+          label: Hva skjedde?
+      validations:
+          required: true
+    - type: textarea
+      id: forventet
+      attributes:
+          label: Hva forventet du?
+      validations:
+          required: true
+    - type: input
+      id: miljo
+      attributes:
+          label: Nettleser og enhet
+          placeholder: Safari på iPhone 15, Chrome på Windows ...
+      validations:
+          required: true
+    - type: textarea
+      id: steg
+      attributes:
+          label: Steg for å gjenskape
+          placeholder: |
+              1. Gå til ...
+              2. Trykk på ...
+      validations:
+          required: false
