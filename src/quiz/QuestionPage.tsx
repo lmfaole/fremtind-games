@@ -79,7 +79,7 @@ export const QuestionPage = ({ index }: { index: number }) => {
 
     return (
         <>
-            <Flex direction="column" gap="2xs" className={styles.header}>
+            <Flex direction="column" gap="xs" className={styles.header}>
                 <ProgressBar
                     aria-valuenow={index + 1}
                     aria-valuemax={questions.length}
