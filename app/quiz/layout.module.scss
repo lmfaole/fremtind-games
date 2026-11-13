@@ -1,0 +1,8 @@
+.page {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--jkl-spacing-xl);
+    padding: var(--jkl-spacing-l);
+}

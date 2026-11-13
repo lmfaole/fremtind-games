@@ -9,7 +9,10 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
     <html lang="nb">
-        <body>{children}</body>
+        {/* Jøkul legger fontfamilie, sidefarge og tekstfarge på klassen `jkl`,
+            ikke på `body`. Uten den arver komponenter som ikke setter egen
+            font-family (NavLink, Breadcrumb, Card, Expander …) nettleserfonten. */}
+        <body className="jkl">{children}</body>
     </html>
 );
 

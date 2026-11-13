@@ -1,18 +1,22 @@
 "use client";
-import { Flex } from "@fremtind/jokul/flex";
-import { NavLink } from "@fremtind/jokul/nav-link";
-import { Quiz } from "@/quiz/Quiz";
-import styles from "./page.module.scss";
+import { Text } from "@fremtind/jokul/typography";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-const QuizPage = () => (
-    <Flex as="main" direction="column" alignItems="center" className={styles.page} gap="xl">
-        <Flex className={styles.header}>
-            <NavLink back href="/">
-                Forsiden
-            </NavLink>
-        </Flex>
-        <Quiz />
-    </Flex>
-);
+// `/quiz` er ikke et spørsmål i seg selv. Statisk eksport har ingen
+// omdirigering på serversiden, så den skjer i nettleseren.
+const QuizIndex = () => {
+    const router = useRouter();
 
-export default QuizPage;
+    useEffect(() => {
+        router.replace("/quiz/1/");
+    }, [router]);
+
+    return (
+        <Text size="s" subdued>
+            Starter quizen …
+        </Text>
+    );
+};
+
+export default QuizIndex;

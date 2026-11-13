@@ -1,6 +1,7 @@
 {
     "name": "fremtind-games",
     "private": true,
+    "packageManager": "pnpm@12.18.0",
     "version": "0.1.0",
     "type": "module",
     "scripts": {
