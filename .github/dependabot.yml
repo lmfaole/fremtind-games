@@ -1,0 +1,20 @@
+version: 2
+updates:
+    - package-ecosystem: npm
+      directory: /
+      schedule:
+          interval: weekly
+      groups:
+          npm:
+              patterns: ["*"]
+      ignore:
+          # @fremtind/jokul er låst til dist-tag `next` med vilje
+          - dependency-name: "@fremtind/jokul"
+            update-types: ["version-update:semver-major", "version-update:semver-minor"]
+    - package-ecosystem: github-actions
+      directory: /
+      schedule:
+          interval: weekly
+      groups:
+          github-actions:
+              patterns: ["*"]
