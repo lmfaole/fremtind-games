@@ -1,0 +1,14 @@
+@use "@fremtind/jokul/styles/base.scss";
+@use "@fremtind/jokul/styles/components.scss";
+
+body {
+    min-height: 100dvh;
+}
+
+// Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle
+// bredden til spørsmålet de hører til. Regelen ligger utenfor Jøkuls
+// cascade layers, og vinner derfor uavhengig av spesifisitet.
+.jkl-text-input-wrapper,
+.jkl-text-area-wrapper {
+    width: 100%;
+}

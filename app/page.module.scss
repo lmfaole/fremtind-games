@@ -1,0 +1,29 @@
+.hero {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--jkl-spacing-xl);
+    background-color: #0e0d0c;
+    background-image: url("/goteborg.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+// Skrim som sikrer kontrast mellom teksten og fotografiet.
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgb(14 13 12 / 0.3) 0%,
+        rgb(14 13 12 / 0.55) 55%,
+        rgb(14 13 12 / 0.92) 100%
+    );
+}
+
+.content {
+    position: relative;
+    max-width: 34rem;
+}

@@ -1,0 +1,28 @@
+{
+    "name": "fremtind-games",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "copy-fonts": "node scripts/copy-fonts.mjs",
+        "predev": "pnpm copy-fonts",
+        "dev": "next dev",
+        "prebuild": "pnpm copy-fonts",
+        "build": "next build",
+        "start": "next start",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@fremtind/jokul": "next",
+        "next": "^15.5.0",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.13.0",
+        "@types/react": "^19.1.0",
+        "@types/react-dom": "^19.1.0",
+        "sass": "^1.85.0",
+        "typescript": "^5.7.0"
+    }
+}
