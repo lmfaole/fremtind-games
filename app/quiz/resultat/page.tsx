@@ -26,7 +26,9 @@ const ResultPage = () => {
         setAnswers(answers);
         setTeam(readTeamName());
         setMembers(readMembers());
-        setScore(questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length);
+        setScore(
+            questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length,
+        );
     }, []);
 
     const restart = () => {
@@ -55,7 +57,9 @@ const ResultPage = () => {
             </Title>
             <Accordion outlined>
                 {sections.map((section) => {
-                    const inSection = questions.filter((question) => question.section === section.id);
+                    const inSection = questions.filter(
+                        (question) => question.section === section.id,
+                    );
                     const correct = inSection.filter((question) =>
                         isCorrect(question, answers[question.id] ?? []),
                     ).length;

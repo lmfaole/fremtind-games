@@ -52,7 +52,10 @@ const TeamPage = () => {
                         setError(undefined);
                     }}
                 />
-                <ButtonGroup className={styles.actions} mainAction={{ type: "submit", children: "Fortsett" }} />
+                <ButtonGroup
+                    className={styles.actions}
+                    mainAction={{ type: "submit", children: "Fortsett" }}
+                />
             </Flex>
         </>
     );

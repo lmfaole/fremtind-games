@@ -25,7 +25,8 @@ const Home = () => {
                         Norge og Sverige
                     </Title>
                     <Text size="l">
-                        Hvor godt kjenner du naboen? Test deg på popkultur, historie, teknologi og alt annet som binder Norge og Sverige sammen.
+                        Hvor godt kjenner du naboen? Test deg på popkultur, historie, teknologi og
+                        alt annet som binder Norge og Sverige sammen.
                     </Text>
                     <Select
                         label="Velg tema"
