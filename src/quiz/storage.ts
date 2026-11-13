@@ -39,3 +39,21 @@ export const clearAnswers = () => {
         // Ignorer – neste svar overskriver uansett.
     }
 };
+
+const TEAM_KEY = "fremtind-games:lag";
+
+export const readTeamName = (): string => {
+    try {
+        return window.sessionStorage.getItem(TEAM_KEY) ?? "";
+    } catch {
+        return "";
+    }
+};
+
+export const saveTeamName = (name: string) => {
+    try {
+        window.sessionStorage.setItem(TEAM_KEY, name);
+    } catch {
+        // Lagnavnet går tapt ved refresh, men quizen fungerer videre.
+    }
+};

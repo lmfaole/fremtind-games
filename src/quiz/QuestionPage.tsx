@@ -90,8 +90,8 @@ export const QuestionPage = ({ index }: { index: number }) => {
                 </Text>
             </Flex>
             <Flex className={styles.header}>
-                <NavLink back href={index === 0 ? "/" : `/quiz/${index}/`}>
-                    {index === 0 ? "Forsiden" : "Forrige spørsmål"}
+                <NavLink back href={index === 0 ? "/quiz/lag/" : `/quiz/${index}/`}>
+                    {index === 0 ? "Lagnavn" : "Forrige spørsmål"}
                 </NavLink>
             </Flex>
             <Flex as="form" direction="column" gap="m" className={styles.form} onSubmit={submit}>

@@ -41,7 +41,7 @@ const Home = () => {
                         mainAction={{
                             type: "button",
                             children: "Start quizen",
-                            onClick: () => router.push("/quiz/1/"),
+                            onClick: () => router.push("/quiz/lag/"),
                         }}
                     />
                 </Flex>

@@ -9,7 +9,7 @@ const QuizIndex = () => {
     const router = useRouter();
 
     useEffect(() => {
-        router.replace("/quiz/1/");
+        router.replace("/quiz/lag/");
     }, [router]);
 
     return (

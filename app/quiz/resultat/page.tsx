@@ -6,7 +6,7 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { isCorrect, questions, sections } from "@/quiz/questions";
-import { clearAnswers, readAnswers } from "@/quiz/storage";
+import { clearAnswers, readAnswers, readTeamName } from "@/quiz/storage";
 
 const SMS_NUMBER = "+4790713472";
 
@@ -17,20 +17,23 @@ const ResultPage = () => {
     const router = useRouter();
     const [score, setScore] = useState<number>();
     const [answers, setAnswers] = useState<Record<string, string[]>>({});
+    const [team, setTeam] = useState("");
 
     useEffect(() => {
         const answers = readAnswers();
         setAnswers(answers);
+        setTeam(readTeamName());
         setScore(questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length);
     }, []);
 
     const restart = () => {
         clearAnswers();
-        router.push("/quiz/1/");
+        router.push("/quiz/lag/");
     };
 
     const smsBody = [
-        `Mine svar på quizen: ${score ?? 0} av ${questions.length} riktige`,
+        `Lag: ${team || "Uten navn"}`,
+        `Svar på quizen: ${score ?? 0} av ${questions.length} riktige`,
         ...questions.map(
             (question, index) =>
                 `${index + 1}. ${formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}`,

@@ -5,7 +5,8 @@ En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål o
 | Rute              | Innhold                                                   |
 | ----------------- | --------------------------------------------------------- |
 | `/`               | Forside med heldekkende bakgrunnsbilde fra Göteborg       |
-| `/quiz`           | Omdirigerer til `/quiz/1`                                 |
+| `/quiz`           | Omdirigerer til `/quiz/lag`                               |
+| `/quiz/lag`       | Lagnavn, før første spørsmål. Sendes med i SMS-en         |
 | `/quiz/1` … `/18` | Ett spørsmål per side, én side per spørsmål               |
 | `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene            |
 
