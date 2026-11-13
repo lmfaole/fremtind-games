@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { isCorrect, questions, sections } from "@/quiz/questions";
 import { clearAnswers, readAnswers } from "@/quiz/storage";
 
+const SMS_NUMBER = "";
+
 const formatAnswer = (answer: string | number | string[]) =>
     Array.isArray(answer) ? answer.join(", ") : String(answer);
 
@@ -26,6 +28,16 @@ const ResultPage = () => {
         clearAnswers();
         router.push("/quiz/1/");
     };
+
+    const smsBody = [
+        `Mine svar på quizen: ${score ?? 0} av ${questions.length} riktige`,
+        ...questions.map(
+            (question, index) =>
+                `${index + 1}. ${formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}`,
+        ),
+    ].join("\n");
+    // Tomt nummer lar mottakeren velges i SMS-appen. Sett inn nummer her ved behov.
+    const smsHref = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(smsBody)}`;
 
     return (
         <Flex direction="column" gap="l" alignItems="center">
@@ -82,7 +94,10 @@ const ResultPage = () => {
                     </Flex>
                 </ExpandablePanel.Content>
             </ExpandablePanel>
-            <Button variant="primary" onClick={restart}>
+            <Button variant="primary" as="a" href={smsHref}>
+                Send svar på SMS
+            </Button>
+            <Button variant="secondary" onClick={restart}>
                 Prøv igjen
             </Button>
         </Flex>
