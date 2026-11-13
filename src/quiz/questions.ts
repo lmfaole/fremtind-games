@@ -2,6 +2,7 @@ export const sections = [
     { id: "popkultur", title: "Popkultur" },
     { id: "historie", title: "Historie" },
     { id: "teknologi", title: "Moderne teknologi" },
+    { id: "naboer", title: "Norge og Sverige" },
 ] as const;
 
 export type SectionId = (typeof sections)[number]["id"];
@@ -176,6 +177,47 @@ const allQuestions: Question[] = [
         question: "Hvilket land ble nettleseren Opera opprinnelig utviklet i?",
         label: "Land",
         answer: "Norge",
+    },
+    {
+        type: "choice",
+        id: "harryhandel",
+        section: "naboer",
+        question: "Hva kalles nordmenns handleturer over grensen til Sverige for å spare penger?",
+        options: ["Sverigeshopping", "Harryhandel", "Grensekjøp", "Svensketuren"],
+        answer: "Harryhandel",
+    },
+    {
+        type: "choice",
+        id: "rolig",
+        section: "naboer",
+        question: "Hva betyr det svenske ordet «rolig»?",
+        options: ["Stille", "Morsom", "Trygg", "Sakte"],
+        answer: "Morsom",
+    },
+    {
+        type: "text",
+        id: "fika",
+        section: "naboer",
+        question: "Hva heter den svenske tradisjonen med kaffe og noe å bite i på pausen?",
+        label: "Ord",
+        answer: "Fika",
+    },
+    {
+        type: "choice",
+        id: "grense",
+        section: "naboer",
+        question: "Omtrent hvor lang er grensen mellom Norge og Sverige?",
+        options: ["500 km", "1 000 km", "1 600 km", "2 500 km"],
+        answer: "1 600 km",
+    },
+    {
+        type: "multi",
+        id: "svenske-byer",
+        section: "naboer",
+        question: "Hvilke av disse byene ligger i Sverige?",
+        description: "Flere svar er riktige.",
+        options: ["Karlstad", "Halden", "Östersund", "Kongsvinger", "Gävle"],
+        answer: ["Karlstad", "Östersund", "Gävle"],
     },
 ];
 
