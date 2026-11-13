@@ -12,7 +12,7 @@ import { Text } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import styles from "./QuestionPage.module.scss";
-import { isAnswered, type Question, questions } from "./questions";
+import { isAnswered, type Question, questions, sectionOf } from "./questions";
 import { readAnswers, saveAnswer } from "./storage";
 
 const emptyMessage = (question: Question) => {
@@ -83,7 +83,7 @@ export const QuestionPage = ({ index }: { index: number }) => {
                     aria-valuetext={`Spørsmål ${index + 1} av ${questions.length}`}
                 />
                 <Text size="s" subdued>
-                    Spørsmål {index + 1} av {questions.length}
+                    {sectionOf(question).title} · Spørsmål {index + 1} av {questions.length}
                 </Text>
                 <Flex direction="column" gap="m" asChild>
                     <FieldGroup

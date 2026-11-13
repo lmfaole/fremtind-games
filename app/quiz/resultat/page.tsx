@@ -5,7 +5,7 @@ import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isCorrect, questions } from "@/quiz/questions";
+import { isCorrect, questions, sections } from "@/quiz/questions";
 import { clearAnswers, readAnswers } from "@/quiz/storage";
 
 const formatAnswer = (answer: string | number | string[]) =>
@@ -37,18 +37,47 @@ const ResultPage = () => {
             <Text size="s" subdued center>
                 Svarene ligger i nettleserfanen, og nullstilles når du starter på nytt.
             </Text>
+            {score !== undefined && (
+                <Flex direction="column" gap="xs" alignItems="center">
+                    {sections.map((section) => {
+                        const inSection = questions.filter((question) => question.section === section.id);
+                        const correct = inSection.filter((question) =>
+                            isCorrect(question, answers[question.id] ?? []),
+                        ).length;
+
+                        return (
+                            <Text key={section.id}>
+                                {section.title}: {correct} av {inSection.length}
+                            </Text>
+                        );
+                    })}
+                </Flex>
+            )}
             <ExpandablePanel outlined>
                 <ExpandablePanel.Header>Se riktige svar</ExpandablePanel.Header>
                 <ExpandablePanel.Content>
-                    <Flex as="ol" direction="column" gap="m">
-                        {questions.map((question) => (
-                            <li key={question.id}>
-                                <Text subdued>{question.question}</Text>
-                                <Text>
-                                    Ditt svar: {formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}
-                                </Text>
-                                <Text>Fasit: {formatAnswer(question.answer)}</Text>
-                            </li>
+                    <Flex direction="column" gap="l">
+                        {sections.map((section) => (
+                            <Flex as="section" direction="column" gap="m" key={section.id}>
+                                <Title as="h2" size="s">
+                                    {section.title}
+                                </Title>
+                                <Flex as="ol" direction="column" gap="m">
+                                    {questions
+                                        .filter((question) => question.section === section.id)
+                                        .map((question) => (
+                                            <li key={question.id}>
+                                                <Text subdued>{question.question}</Text>
+                                                <Text>
+                                                    Ditt svar:{" "}
+                                                    {formatAnswer(answers[question.id] ?? []) ||
+                                                        "Ikke besvart"}
+                                                </Text>
+                                                <Text>Fasit: {formatAnswer(question.answer)}</Text>
+                                            </li>
+                                        ))}
+                                </Flex>
+                            </Flex>
                         ))}
                     </Flex>
                 </ExpandablePanel.Content>

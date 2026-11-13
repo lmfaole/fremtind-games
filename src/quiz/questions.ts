@@ -1,5 +1,14 @@
+export const sections = [
+    { id: "popkultur", title: "Popkultur" },
+    { id: "historie", title: "Historie" },
+    { id: "teknologi", title: "Moderne teknologi" },
+] as const;
+
+export type SectionId = (typeof sections)[number]["id"];
+
 interface BaseQuestion {
     id: string;
+    section: SectionId;
     question: string;
     description?: string;
 }
@@ -55,10 +64,11 @@ export const isCorrect = (question: Question, value: string[]) => {
     }
 };
 
-export const questions: Question[] = [
+const allQuestions: Question[] = [
     {
         type: "choice",
         id: "abba",
+        section: "popkultur",
         question: "Hvilken låt vant ABBA Eurovision Song Contest med i 1974?",
         options: ["Waterloo", "Dancing Queen", "Mamma Mia", "SOS"],
         answer: "Waterloo",
@@ -66,6 +76,7 @@ export const questions: Question[] = [
     {
         type: "number",
         id: "union",
+        section: "historie",
         question: "Hvilket år ble unionen mellom Norge og Sverige oppløst?",
         label: "Årstall",
         answer: 1905,
@@ -75,6 +86,7 @@ export const questions: Question[] = [
     {
         type: "choice",
         id: "take-on-me",
+        section: "popkultur",
         question: "Hvilket norsk band står bak «Take On Me»?",
         options: ["Madrugada", "Röyksopp", "a-ha", "Turbonegro"],
         answer: "a-ha",
@@ -82,6 +94,7 @@ export const questions: Question[] = [
     {
         type: "multi",
         id: "svenske-band",
+        section: "popkultur",
         question: "Hvilke av disse banda er svenske?",
         description: "Flere svar er riktige.",
         options: ["ABBA", "a-ha", "Roxette", "Kent", "Madrugada"],
@@ -90,6 +103,7 @@ export const questions: Question[] = [
     {
         type: "text",
         id: "pippi",
+        section: "popkultur",
         question: "Hvilken svensk forfatter skrev bøkene om Pippi Langstrømpe?",
         description: "Både fornavn og etternavn.",
         label: "Forfatter",
@@ -98,6 +112,7 @@ export const questions: Question[] = [
     {
         type: "choice",
         id: "kalmar",
+        section: "historie",
         question: "Hva het unionen som knyttet Danmark, Norge og Sverige sammen fra 1397?",
         options: ["Hansaforbundet", "Kalmarunionen", "Den nordiske union", "Vasaunionen"],
         answer: "Kalmarunionen",
@@ -105,6 +120,7 @@ export const questions: Question[] = [
     {
         type: "text",
         id: "stiklestad",
+        section: "historie",
         question: "Hvor stod slaget i 1030 som står sentralt i kristningen av Norge?",
         description: "Stedet ligger i Trøndelag.",
         label: "Stedsnavn",
@@ -113,6 +129,7 @@ export const questions: Question[] = [
     {
         type: "number",
         id: "grunnlov",
+        section: "historie",
         question: "Hvilket år ble Norges grunnlov vedtatt på Eidsvoll?",
         label: "Årstall",
         answer: 1814,
@@ -122,6 +139,7 @@ export const questions: Question[] = [
     {
         type: "multi",
         id: "svenske-merker",
+        section: "teknologi",
         question: "Hvilke av disse merkene er svenske?",
         description: "Flere svar er riktige.",
         options: ["IKEA", "Nokia", "Volvo", "Lego", "Spotify"],
@@ -130,6 +148,7 @@ export const questions: Question[] = [
     {
         type: "choice",
         id: "stromming",
+        section: "teknologi",
         question: "Hvilken svensk tjeneste gjorde strømming av musikk til allemannseie?",
         options: ["Deezer", "SoundCloud", "Tidal", "Spotify"],
         answer: "Spotify",
@@ -137,8 +156,33 @@ export const questions: Question[] = [
     {
         type: "text",
         id: "skam",
+        section: "popkultur",
         question: "Hvilken norsk TV-serie fra 2015 ble en internasjonal ungdomssuksess?",
         label: "Tittel",
         answer: "Skam",
     },
+    {
+        type: "choice",
+        id: "minecraft",
+        section: "teknologi",
+        question: "Hvilket land kommer Markus «Notch» Persson, skaperen av Minecraft, fra?",
+        options: ["Norge", "Sverige", "Danmark", "Finland"],
+        answer: "Sverige",
+    },
+    {
+        type: "text",
+        id: "opera",
+        section: "teknologi",
+        question: "Hvilket land ble nettleseren Opera opprinnelig utviklet i?",
+        label: "Land",
+        answer: "Norge",
+    },
 ];
+
+// Spørsmålene vises seksjon for seksjon, i rekkefølgen i `sections`.
+export const questions: Question[] = sections.flatMap((section) =>
+    allQuestions.filter((question) => question.section === section.id),
+);
+
+export const sectionOf = (question: Question) =>
+    sections.find((section) => section.id === question.section) ?? sections[0];

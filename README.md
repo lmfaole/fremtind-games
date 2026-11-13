@@ -6,7 +6,7 @@ En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål o
 | ----------------- | --------------------------------------------------------- |
 | `/`               | Forside med heldekkende bakgrunnsbilde fra Göteborg       |
 | `/quiz`           | Omdirigerer til `/quiz/1`                                 |
-| `/quiz/1` … `/11` | Ett spørsmål per side, én side per spørsmål               |
+| `/quiz/1` … `/13` | Ett spørsmål per side, én side per spørsmål               |
 | `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene            |
 
 ## Kom i gang
@@ -35,6 +35,8 @@ pnpm dev
     - `type: "number"` — tallsvar i et `NumberInput`, med valgfrie `min`/`max`. `answer` er et tall, og sammenlignes numerisk, ikke som tekst.
 
     Svaret lagres alltid som en `string[]`, også for typene som bare tar én verdi — da slipper lagring, validering og poengberegning å forholde seg til flere former. Tekstsvar sammenlignes normalisert (trimmet, uten forskjell på store/små bokstaver, med sammenslått mellomrom), så det finnes foreløpig bare én godkjent skrivemåte per spørsmål.
+
+- **Seksjoner.** `sections` i `src/quiz/questions.ts` lister seksjonene (popkultur, historie, moderne teknologi), og hvert spørsmål har en `section`-id. Spørsmålene kan stå i vilkårlig rekkefølge i filen — `questions` sorteres seksjon for seksjon etter `sections`, og rutene `/quiz/N` følger den rekkefølgen. Seksjonens navn vises over hvert spørsmål, og resultatsiden viser poeng per seksjon og grupperer fasiten etter seksjon. En ny seksjon er én linje i `sections` pluss spørsmålene.
 
 - **Bredde på inputfelt.** Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden, så `app/globals.scss` setter `width: 100%` på `.jkl-text-input-wrapper`, `.jkl-text-area-wrapper` og `.jkl-number-input__wrapper`. Regelen ligger utenfor Jøkuls cascade layers og vinner derfor uavhengig av spesifisitet. `NumberInput` trenger en egen selektor fordi `.jkl-number-input` setter `align-items: flex-start`, som ellers krymper feltet uansett bredde. Selve bredden styres av `.form` i `src/quiz/QuestionPage.module.scss`.
 
