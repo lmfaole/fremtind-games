@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@fremtind/jokul/button";
+import { ButtonGroup } from "@fremtind/jokul/button-group";
 import { CheckboxPanel } from "@fremtind/jokul/checkbox-panel";
 import { Flex } from "@fremtind/jokul/flex";
 import { FieldGroup } from "@fremtind/jokul/input-group";
@@ -57,6 +57,8 @@ export const QuestionPage = ({ index }: { index: number }) => {
         setError(undefined);
     };
 
+    const next = () => router.push(isLast ? "/quiz/resultat/" : `/quiz/${index + 2}/`);
+
     const submit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
 
@@ -66,7 +68,13 @@ export const QuestionPage = ({ index }: { index: number }) => {
         }
 
         saveAnswer(question.id, value);
-        router.push(isLast ? "/quiz/resultat/" : `/quiz/${index + 2}/`);
+        next();
+    };
+
+    // Et tidligere svar fjernes, slik at resultatet viser «Ikke besvart».
+    const skip = () => {
+        saveAnswer(question.id, []);
+        next();
     };
 
     return (
@@ -134,11 +142,10 @@ export const QuestionPage = ({ index }: { index: number }) => {
                         )}
                     </FieldGroup>
                 </Flex>
-                <Flex justifyContent="center">
-                    <Button type="submit" variant="primary">
-                        {isLast ? "Se resultat" : "Fortsett"}
-                    </Button>
-                </Flex>
+                <ButtonGroup
+                    mainAction={{ type: "submit", children: isLast ? "Se resultat" : "Fortsett" }}
+                    secondaryAction={{ type: "button", children: "Hopp over", onClick: skip }}
+                />
             </Flex>
         </>
     );
