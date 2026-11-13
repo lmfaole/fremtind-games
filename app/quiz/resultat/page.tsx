@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@fremtind/jokul/button";
-import { ExpandablePanel } from "@fremtind/jokul/expander";
+import { Accordion, ExpandablePanel } from "@fremtind/jokul/expander";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
@@ -49,51 +49,37 @@ const ResultPage = () => {
             <Text size="s" subdued center>
                 Svarene ligger i nettleserfanen, og nullstilles når du starter på nytt.
             </Text>
-            {score !== undefined && (
-                <Flex direction="column" gap="xs" alignItems="center">
-                    {sections.map((section) => {
-                        const inSection = questions.filter((question) => question.section === section.id);
-                        const correct = inSection.filter((question) =>
-                            isCorrect(question, answers[question.id] ?? []),
-                        ).length;
+            <Accordion outlined>
+                {sections.map((section) => {
+                    const inSection = questions.filter((question) => question.section === section.id);
+                    const correct = inSection.filter((question) =>
+                        isCorrect(question, answers[question.id] ?? []),
+                    ).length;
 
-                        return (
-                            <Text key={section.id}>
-                                {section.title}: {correct} av {inSection.length}
-                            </Text>
-                        );
-                    })}
-                </Flex>
-            )}
-            <ExpandablePanel outlined>
-                <ExpandablePanel.Header>Se riktige svar</ExpandablePanel.Header>
-                <ExpandablePanel.Content>
-                    <Flex direction="column" gap="l">
-                        {sections.map((section) => (
-                            <Flex as="section" direction="column" gap="m" key={section.id}>
-                                <Title as="h2" size="s">
-                                    {section.title}
-                                </Title>
+                    return (
+                        <ExpandablePanel key={section.id}>
+                            <ExpandablePanel.Header>
+                                {section.title}: {correct} av {inSection.length} riktige
+                            </ExpandablePanel.Header>
+                            <ExpandablePanel.Content>
                                 <Flex as="ol" direction="column" gap="m">
-                                    {questions
-                                        .filter((question) => question.section === section.id)
-                                        .map((question) => (
-                                            <li key={question.id}>
-                                                <Text subdued>{question.question}</Text>
-                                                <Text>
-                                                    Ditt svar:{" "}
-                                                    {formatAnswer(answers[question.id] ?? []) ||
-                                                        "Ikke besvart"}
-                                                </Text>
-                                                <Text>Fasit: {formatAnswer(question.answer)}</Text>
-                                            </li>
-                                        ))}
+                                    {inSection.map((question) => (
+                                        <li key={question.id}>
+                                            <Text subdued>{question.question}</Text>
+                                            <Text>
+                                                Ditt svar:{" "}
+                                                {formatAnswer(answers[question.id] ?? []) ||
+                                                    "Ikke besvart"}
+                                            </Text>
+                                            <Text>Fasit: {formatAnswer(question.answer)}</Text>
+                                        </li>
+                                    ))}
                                 </Flex>
-                            </Flex>
-                        ))}
-                    </Flex>
-                </ExpandablePanel.Content>
-            </ExpandablePanel>
+                            </ExpandablePanel.Content>
+                        </ExpandablePanel>
+                    );
+                })}
+            </Accordion>
             <Button variant="primary" as="a" href={smsHref}>
                 Send svar på SMS
             </Button>
