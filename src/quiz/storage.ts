@@ -57,3 +57,22 @@ export const saveTeamName = (name: string) => {
         // Lagnavnet går tapt ved refresh, men quizen fungerer videre.
     }
 };
+
+const MEMBERS_KEY = "fremtind-games:medlemmer";
+
+export const readMembers = (): string[] => {
+    try {
+        const parsed: unknown = JSON.parse(window.sessionStorage.getItem(MEMBERS_KEY) ?? "[]");
+        return isStringList(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+};
+
+export const saveMembers = (members: string[]) => {
+    try {
+        window.sessionStorage.setItem(MEMBERS_KEY, JSON.stringify(members));
+    } catch {
+        // Medlemmene går tapt ved refresh, men quizen fungerer videre.
+    }
+};

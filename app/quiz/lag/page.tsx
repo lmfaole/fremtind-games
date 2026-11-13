@@ -28,7 +28,7 @@ const TeamPage = () => {
         }
 
         saveTeamName(trimmed);
-        router.push("/quiz/1/");
+        router.push("/quiz/medlemmer/");
     };
 
     return (
@@ -52,7 +52,7 @@ const TeamPage = () => {
                         setError(undefined);
                     }}
                 />
-                <ButtonGroup mainAction={{ type: "submit", children: "Start quizen" }} />
+                <ButtonGroup mainAction={{ type: "submit", children: "Fortsett" }} />
             </Flex>
         </>
     );
