@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { isCorrect, questions, sections } from "@/quiz/questions";
 import { clearAnswers, readAnswers } from "@/quiz/storage";
 
-const SMS_NUMBER = "";
+const SMS_NUMBER = "+4790713472";
 
 const formatAnswer = (answer: string | number | string[]) =>
     Array.isArray(answer) ? answer.join(", ") : String(answer);
@@ -36,7 +36,7 @@ const ResultPage = () => {
                 `${index + 1}. ${formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}`,
         ),
     ].join("\n");
-    // Tomt nummer lar mottakeren velges i SMS-appen. Sett inn nummer her ved behov.
+    // Mottakeren er fylt inn på forhånd.
     const smsHref = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(smsBody)}`;
 
     return (
