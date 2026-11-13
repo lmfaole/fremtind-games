@@ -1,0 +1,61 @@
+# Arkitektur
+
+Hvordan quizen er satt sammen: ruter, spørsmål, seksjoner, lagring og sider. Jøkul-spesifikke fallgruver står i [jokul.md](jokul.md), og publisering i [deploy.md](deploy.md).
+
+## Ruter
+
+| Rute              | Innhold                                               | Fil                           |
+| ----------------- | ----------------------------------------------------- | ----------------------------- |
+| `/`               | Forside med bakgrunnsbilde fra Göteborg og temavelger | `app/page.tsx`                |
+| `/quiz`           | Omdirigerer til `/quiz/lag/` i nettleseren            | `app/quiz/page.tsx`           |
+| `/quiz/lag`       | Lagnavn, før første spørsmål                          | `app/quiz/lag/page.tsx`       |
+| `/quiz/medlemmer` | Opptil fire lagmedlemmer                              | `app/quiz/medlemmer/page.tsx` |
+| `/quiz/1` … `/18` | Ett spørsmål per side                                 | `app/quiz/[step]/page.tsx`    |
+| `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene        | `app/quiz/resultat/page.tsx`  |
+
+Lagnavn og medlemmer sendes med i SMS-en fra resultatsiden. Antall spørsmål følger `questions` i `src/quiz/questions.ts`, og `next.config.ts` har `trailingSlash: true`.
+
+## Spørsmål
+
+Spørsmål ligger i `src/quiz/questions.ts` (`allQuestions`), og finnes i fire varianter:
+
+- `type: "choice"` — ett riktig svar blant faste alternativer, ett `RadioPanel` per alternativ.
+- `type: "multi"` — flere riktige svar, ett `CheckboxPanel` per alternativ. `answer` er en liste, og svaret må treffe akkurat de alternativene — verken flere eller færre.
+- `type: "text"` — fritekstsvar i et `TextInput`. Trenger en `label` i tillegg til spørsmålet, siden spørsmålet er sidens overskrift og feltet sin egen korte benevnelse.
+- `type: "number"` — tallsvar i et `NumberInput`, med valgfrie `min`/`max`. `answer` er et tall, og sammenlignes numerisk, ikke som tekst.
+
+Svaret lagres alltid som en `string[]`, også for typene som bare tar én verdi — da slipper lagring, validering og poengberegning å forholde seg til flere former. Tekstsvar sammenlignes normalisert (trimmet, uten forskjell på store/små bokstaver, med sammenslått mellomrom), så det finnes foreløpig bare én godkjent skrivemåte per spørsmål.
+
+`pnpm check` (`scripts/check-questions.ts`) validerer spørsmålene. Se [CONTRIBUTING.md](../CONTRIBUTING.md) for hvordan du legger til nye.
+
+## Seksjoner
+
+`sections` i `src/quiz/questions.ts` lister seksjonene (popkultur, historie, moderne teknologi, Norge og Sverige), og hvert spørsmål har en `section`-id. Spørsmålene kan stå i vilkårlig rekkefølge i filen — `questions` sorteres seksjon for seksjon etter `sections`, og rutene `/quiz/N` følger den rekkefølgen. Hvert spørsmål kan hoppes over med «Hopp over» (`ButtonGroup`), som lagrer et tomt svar. Seksjonens navn vises over hvert spørsmål, og resultatsiden viser poeng per seksjon og grupperer fasiten etter seksjon. En ny seksjon er én linje i `sections` pluss spørsmålene.
+
+## Én side per spørsmål
+
+Hvert spørsmål har sin egen URL, slik at en refresh ikke starter quizen på nytt. `app/quiz/[step]/page.tsx` genererer én statisk side per spørsmål med `generateStaticParams`, og svarene lagres underveis i `sessionStorage` (`src/quiz/storage.ts`). Resultatsiden regner ut poengsummen fra de lagrede svarene i stedet for å holde den i minnet.
+
+- `generateStaticParams` kan ikke eksporteres fra en `"use client"`-fil, så rutefilen er en Server Component som bare videresender `step` til klientkomponenten `src/quiz/QuestionPage.tsx`. Det er derfor UI-et ligger i `src/` og ikke i rutefilen.
+- Lagrede svar finnes bare i nettleseren. Feltet fylles derfor i en `useEffect` etter hydrering — den statiske HTML-en har alltid tomt felt, slik at server- og klientmarkup er like.
+
+## Lagring
+
+Alt ligger i nettleseren, og alle lese- og skrivefunksjoner tåler at lagring er blokkert.
+
+| Nøkkel                     | Lager            | Innhold                               | Fil                   |
+| -------------------------- | ---------------- | ------------------------------------- | --------------------- |
+| `fremtind-games:svar`      | `sessionStorage` | `Record<spørsmåls-id, string[]>`      | `src/quiz/storage.ts` |
+| `fremtind-games:lag`       | `sessionStorage` | Lagnavn (`string`)                    | `src/quiz/storage.ts` |
+| `fremtind-games:medlemmer` | `sessionStorage` | Medlemmer (`string[]`)                | `src/quiz/storage.ts` |
+| `fremtind-games:brand`     | `localStorage`   | Valgt tema (`data-brand` på `<html>`) | `src/brand.ts`        |
+
+## Forsiden
+
+Forsiden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller bannermal i storybooken, så `/` låner mekanismer fra `Skjermbilder`-malene: `data-theme="dark"` på seksjonen (som i footeren i `Bedriftsmarked`) slik at alle `--jkl-color-*` løses til mørke verdier via `light-dark()`, et sentrert `Card` med innholdet, og `Title as="h1" size="xl"` for overskriften. Seksjonen er `100svh`. Selve bakgrunnsbildet er vanlig CSS `background-image` med en lett skrim som demper det lyse himmelpartiet — Jøkuls `Image`-komponent tar bare `src`/`srcSet`/`placeholder`/`alt`/`className` og kan ikke dekke hele viewporten.
+
+`public/goteborg.jpg` er Gothia Towers i Göteborg, hentet fra [Unsplash](https://unsplash.com/photos/1614331358979-b83b729df836) og komprimert ned til 1500×2000.
+
+## Bredde på inputfelt
+
+Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden, så `app/globals.scss` setter `width: 100%` på `.jkl-text-input-wrapper`, `.jkl-text-area-wrapper` og `.jkl-number-input__wrapper`. Regelen ligger utenfor Jøkuls cascade layers og vinner derfor uavhengig av spesifisitet. `NumberInput` trenger en egen selektor fordi `.jkl-number-input` setter `align-items: flex-start`, som ellers krymper feltet uansett bredde. Selve bredden styres av `.form` i `src/quiz/QuestionPage.module.scss`.
