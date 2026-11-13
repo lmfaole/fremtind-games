@@ -5,7 +5,6 @@ import { Button } from "@fremtind/jokul/button";
 import { Card } from "@fremtind/jokul/card";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
-import { questions } from "@/quiz/questions";
 import styles from "./page.module.scss";
 
 const Home = () => (
@@ -16,8 +15,7 @@ const Home = () => (
                     Norge og Sverige
                 </Title>
                 <Text size="l">
-                    En quiz om popkultur og historie på begge sider av kjølen. {questions.length}{" "}
-                    spørsmål, ett om gangen.
+                    Hvor godt kjenner du naboen? Test deg på popkultur, historie, teknologi og alt annet som binder Norge og Sverige sammen.
                 </Text>
                 <Flex>
                     <Button variant="primary" as="a" href="/quiz/1/">
