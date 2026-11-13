@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
+// Nettstedet serves fra rota av fremtind.games (se public/CNAME), så ingen basePath.
 const nextConfig: NextConfig = {
-    basePath,
     output: "export",
     images: { unoptimized: true },
     trailingSlash: true,

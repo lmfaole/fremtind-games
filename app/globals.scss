@@ -9,6 +9,7 @@ body {
 // bredden til spørsmålet de hører til. Regelen ligger utenfor Jøkuls
 // cascade layers, og vinner derfor uavhengig av spesifisitet.
 .jkl-text-input-wrapper,
-.jkl-text-area-wrapper {
+.jkl-text-area-wrapper,
+.jkl-number-input__wrapper {
     width: 100%;
 }

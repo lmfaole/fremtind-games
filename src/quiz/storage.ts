@@ -1,18 +1,30 @@
 const KEY = "fremtind-games:svar";
 
+const isStringList = (value: unknown): value is string[] =>
+    Array.isArray(value) && value.every((entry) => typeof entry === "string");
+
 // sessionStorage kan være utilgjengelig (privat modus, blokkerte cookies) og
 // innholdet kan være tuklet med, så lesing og skriving må tåle å feile.
-export const readAnswers = (): Record<string, string> => {
+export const readAnswers = (): Record<string, string[]> => {
     try {
         const stored = window.sessionStorage.getItem(KEY);
         const parsed = stored ? JSON.parse(stored) : null;
-        return parsed && typeof parsed === "object" ? parsed : {};
+
+        if (!parsed || typeof parsed !== "object") {
+            return {};
+        }
+
+        return Object.fromEntries(
+            Object.entries(parsed).filter((entry): entry is [string, string[]] =>
+                isStringList(entry[1]),
+            ),
+        );
     } catch {
         return {};
     }
 };
 
-export const saveAnswer = (id: string, value: string) => {
+export const saveAnswer = (id: string, value: string[]) => {
     try {
         window.sessionStorage.setItem(KEY, JSON.stringify({ ...readAnswers(), [id]: value }));
     } catch {

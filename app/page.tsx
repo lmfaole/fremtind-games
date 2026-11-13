@@ -8,14 +8,8 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { questions } from "@/quiz/questions";
 import styles from "./page.module.scss";
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
 const Home = () => (
-    <main
-        className={styles.hero}
-        data-theme="dark"
-        style={{ "--hero-image": `url("${basePath}/goteborg.jpg")` } as React.CSSProperties}
-    >
+    <main className={styles.hero} data-theme="dark">
         <Card padding="xl" className={styles.card}>
             <Flex direction="column" gap="l">
                 <Title as="h1" size="xl">
@@ -26,7 +20,7 @@ const Home = () => (
                     spørsmål, ett om gangen.
                 </Text>
                 <Flex>
-                    <Button variant="primary" as="a" href={`${basePath}/quiz/1/`}>
+                    <Button variant="primary" as="a" href="/quiz/1/">
                         Start quizen
                     </Button>
                 </Flex>
