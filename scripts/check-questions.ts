@@ -1,7 +1,12 @@
 // Validerer src/quiz/questions.ts. Kjøres med `pnpm check`.
 // Bruker `allQuestions` (ikke `questions`), siden sistnevnte filtrerer bort spørsmål med ukjent seksjon.
 // Feilmeldingene peker på spørsmålets id, slik at feilen er lett å finne.
-import { allQuestions as questions, sections } from "../src/quiz/questions.ts";
+import {
+    allQuestions as questions,
+    answerKeys,
+    correctValue,
+    sections,
+} from "../src/quiz/questions.ts";
 
 const errors: string[] = [];
 const fail = (id: string, message: string) => errors.push(`Spørsmål «${id}»: ${message}`);
@@ -30,6 +35,17 @@ for (const question of questions) {
     if (isBlank(question.question)) fail(id, "spørsmålsteksten er tom.");
     if (question.description !== undefined && isBlank(question.description)) {
         fail(id, "`description` er satt, men tom. Fjern feltet eller fyll det ut.");
+    }
+
+    // Fasitsvaret må gi svarnøkler som statistikken kan slå opp.
+    const keys = answerKeys(question, correctValue(question));
+    if (keys.length === 0) fail(id, "riktig svar gir ingen svarnøkler (`answerKeys`).");
+    if (question.type === "choice" || question.type === "multi") {
+        for (const key of keys) {
+            if (!question.options.includes(key)) {
+                fail(id, `svarnøkkelen «${key}» finnes ikke blant alternativene.`);
+            }
+        }
     }
 
     switch (question.type) {

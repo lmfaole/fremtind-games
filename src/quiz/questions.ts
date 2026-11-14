@@ -65,6 +65,34 @@ export const isCorrect = (question: Question, value: string[]) => {
     }
 };
 
+/** Riktig svar på samme form som lagrede svar (`string[]`). */
+export const correctValue = (question: Question): string[] =>
+    Array.isArray(question.answer) ? question.answer : [String(question.answer)];
+
+/**
+ * Normaliserte svarnøkler som sendes til statistikk-backenden. Tomt svar gir
+ * ingen nøkler. Må være stabile: de brukes som nøkler i aggregeringen.
+ */
+export const answerKeys = (question: Question, value: string[]): string[] => {
+    if (!isAnswered(value)) {
+        return [];
+    }
+
+    switch (question.type) {
+        case "choice":
+            return [value[0]];
+        case "multi":
+            return [...new Set(value.filter((entry) => entry.trim() !== ""))];
+        case "number": {
+            // Komma som desimaltegn og mellomrom som tusenskille, som i «1 905».
+            const given = value[0].replace(/\s+/g, "").replace(",", ".");
+            return given !== "" && Number.isFinite(Number(given)) ? [String(Number(given))] : [];
+        }
+        default:
+            return [normalize(value[0])];
+    }
+};
+
 export const allQuestions: Question[] = [
     {
         type: "choice",
