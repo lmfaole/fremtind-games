@@ -64,7 +64,7 @@ Utenfor tidsrommet viser forsiden «Åpner <tid>» eller «Stengt», kortet kan 
 
 Spørsmålene ligger i `questions` i quizens fil, f.eks. `src/quizzes/norge-sverige-1.ts`.
 
-1. Velg en `section` (`popkultur`, `historie`, `teknologi` eller `naboer`) og en kort `id` som er unik på tvers av alle quizer (f.eks. `take-on-me`).
+1. Velg en `section` fra quizens `sections` (del 1: `popkultur`, `historie`, `teknologi`, `naboer`; del 2: `mat`, `sport`, `natur`, `oppfinnelser`) og en kort `id` som er unik på tvers av alle quizer (f.eks. `take-on-me`).
 2. Legg objektet hvor som helst i `questions`. Rekkefølgen i filen spiller ingen rolle: spørsmålene vises seksjon for seksjon, og `/quizer/<slug>/N` følger den rekkefølgen. Antall sider økes automatisk.
 3. Kjør `pnpm check`. Den peker på spørsmålets `id` hvis noe er galt (tomme felt, duplikate `id`-er eller alternativer, svar som ikke finnes blant alternativene, `min` over `max`).
 4. Kjør `pnpm dev` og klikk deg gjennom spørsmålet.
