@@ -5,7 +5,7 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useEffect, useState } from "react";
 import { fetchStats, track, type Stats } from "@/analytics";
 import { QuestionStats } from "@/analytics/QuestionStats";
-import { isCorrect } from "@/quiz/answers";
+import { formatPoints, pointsFor, sumPoints } from "@/quiz/answers";
 import { LinkButtonGroup } from "@/quiz/LinkButtonGroup";
 import styles from "./page.module.scss";
 import { readAnswers, readCompleted, saveCompleted } from "@/quiz/storage";
@@ -26,14 +26,12 @@ const ResultPage = () => {
         const completed = readCompleted(slug);
         const answers = completed ?? readAnswers(slug);
         setAnswers(answers);
-        const correct = questions.filter((question) =>
-            isCorrect(question, answers[question.id] ?? []),
-        ).length;
-        setScore(correct);
+        const points = sumPoints(questions, answers);
+        setScore(points);
 
         if (!completed && questions.every((question) => question.id in answers)) {
             saveCompleted(slug, answers);
-            track("quiz_finished", { quiz: slug, score: correct, total: questions.length });
+            track("quiz_finished", { quiz: slug, score: points, total: questions.length });
         }
 
         // Statistikk er kosmetikk: feil gir null og ingenting vises.
@@ -51,21 +49,19 @@ const ResultPage = () => {
             <Title as="h1" size="l" center>
                 {score === undefined
                     ? "Regner ut resultatet …"
-                    : `Du fikk ${score} av ${questions.length} riktige`}
+                    : `Du fikk ${formatPoints(score)} av ${questions.length} poeng`}
             </Title>
             <Accordion outlined>
                 {sections.map((section) => {
                     const inSection = questions.filter(
                         (question) => question.section === section.id,
                     );
-                    const correct = inSection.filter((question) =>
-                        isCorrect(question, answers[question.id] ?? []),
-                    ).length;
+                    const points = sumPoints(inSection, answers);
 
                     return (
                         <ExpandablePanel key={section.id}>
                             <ExpandablePanel.Header>
-                                {section.title}: {correct} av {inSection.length} riktige
+                                {section.title}: {formatPoints(points)} av {inSection.length} poeng
                             </ExpandablePanel.Header>
                             <ExpandablePanel.Content>
                                 <Flex as="ol" direction="column" gap="m">
@@ -78,6 +74,15 @@ const ResultPage = () => {
                                                     "Ikke besvart"}
                                             </Text>
                                             <Text>Fasit: {formatAnswer(question.answer)}</Text>
+                                            {(() => {
+                                                const earned = pointsFor(
+                                                    question,
+                                                    answers[question.id] ?? [],
+                                                );
+                                                return earned > 0 && earned < 1 ? (
+                                                    <Text>Delpoeng: {formatPoints(earned)}</Text>
+                                                ) : null;
+                                            })()}
                                             <QuestionStats
                                                 question={question}
                                                 value={answers[question.id] ?? []}

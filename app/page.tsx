@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
 import { InstallPrompt } from "@/pwa/InstallPrompt";
 import { PushPrompt } from "@/pwa/PushPrompt";
+import { formatPoints } from "@/quiz/answers";
 import { readScore } from "@/quiz/score";
 import { formatQuizTime, type QuizStatus, quizStatus } from "@/quiz/status";
 import { quizzes } from "@/quizzes";
@@ -59,7 +60,8 @@ const Home = () => {
                                     {score !== null && (
                                         <Text>
                                             <strong>
-                                                {score} av {quiz.questions.length} riktige
+                                                {formatPoints(score)} av {quiz.questions.length}{" "}
+                                                poeng
                                             </strong>
                                         </Text>
                                     )}

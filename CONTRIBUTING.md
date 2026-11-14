@@ -127,8 +127,19 @@ Svaret sammenlignes uten forskjell på store/små bokstaver og ekstra mellomrom,
     answer: 1814,
     min: 1700, // valgfri
     max: 1900, // valgfri, svaret må ligge mellom min og max
+    tolerance: 5, // valgfri: delpoeng for svar innenfor ±5 år, se «Poeng»
 },
 ```
+
+### Poeng
+
+Hvert spørsmål gir maks 1 poeng, og totalen vises som «X av N poeng» (`pointsFor` og `sumPoints` i `src/quiz/answers.ts`):
+
+- `choice` og `text`: 1 for riktig, ellers 0.
+- `multi`: hvert riktig valg gir 1/n, og hvert feil valg trekker 1/n. Aldri under 0. Alle riktige og ingen feil gir 1.
+- `number`: 1 for eksakt treff. Med `tolerance` synker poengene lineært fra 1 til 0 jo nærmere avstanden kommer toleransen (±5 år: 1 år unna gir 0,8). Uten `tolerance` gjelder bare eksakt treff.
+
+`correct` i analysen og «riktig» i statistikken betyr full pott. Tester ligger i `scripts/test-scoring.ts` og kjøres av `pnpm test`.
 
 ### Ny seksjon
 

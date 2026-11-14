@@ -34,9 +34,9 @@ Spørsmåls-id-er må være unike på tvers av alle quizer og må ikke endres: b
 Spørsmål ligger i `questions` i quizens fil (`src/quizzes/<slug>.ts`), og finnes i fire varianter:
 
 - `type: "choice"` — ett riktig svar blant faste alternativer, ett `RadioPanel` per alternativ.
-- `type: "multi"` — flere riktige svar, ett `CheckboxPanel` per alternativ. `answer` er en liste, og svaret må treffe akkurat de alternativene — verken flere eller færre.
+- `type: "multi"` — flere riktige svar, ett `CheckboxPanel` per alternativ. `answer` er en liste, og svaret gir delpoeng per riktig valg, med like stort trekk per feil valg (se «Poeng» i CONTRIBUTING.md).
 - `type: "text"` — fritekstsvar i et `TextInput`. Trenger en `label` i tillegg til spørsmålet, siden spørsmålet er sidens overskrift og feltet sin egen korte benevnelse.
-- `type: "number"` — tallsvar i et `NumberInput`, med valgfrie `min`/`max`. `answer` er et tall, og sammenlignes numerisk, ikke som tekst.
+- `type: "number"` — tallsvar i et `NumberInput`, med valgfrie `min`/`max`. `answer` er et tall, og sammenlignes numerisk, ikke som tekst. Valgfri `tolerance` gir delpoeng for svar som ligger nær.
 
 Svaret lagres alltid som en `string[]`, også for typene som bare tar én verdi — da slipper lagring, validering og poengberegning å forholde seg til flere former. Tekstsvar sammenlignes normalisert (trimmet, uten forskjell på store/små bokstaver, med sammenslått mellomrom), så det finnes foreløpig bare én godkjent skrivemåte per spørsmål.
 
@@ -79,7 +79,7 @@ Alle lagringsfunksjonene tar quizens slug, slik at quizene ikke deler svar eller
 
 ## Forsiden
 
-Forsiden er en liste over alle quizer i `quizzes` (`src/quizzes/index.ts`), i den rekkefølgen de står der. Hver quiz vises som et Jøkul-`Card` (med `CardImage`, tittel og antall spørsmål) som lenker til `/quizer/<slug>/lag/`. Er quizen fullført i denne nettleseren (se «Bare én gjennomspilling»), vises «X av N riktige» og kortet lenker til `/quizer/<slug>/resultat/` i stedet. Poengene leses fra `localStorage` etter hydrering (`readScore` i `src/quiz/score.ts`), så den statiske HTML-en aldri viser dem. Kort for quizer utenfor åpningstiden er beskrevet under «Åpningstid».
+Forsiden er en liste over alle quizer i `quizzes` (`src/quizzes/index.ts`), i den rekkefølgen de står der. Hver quiz vises som et Jøkul-`Card` (med `CardImage`, tittel og antall spørsmål) som lenker til `/quizer/<slug>/lag/`. Er quizen fullført i denne nettleseren (se «Bare én gjennomspilling»), vises «X av N poeng» (delpoeng gir desimaler) og kortet lenker til `/quizer/<slug>/resultat/` i stedet. Poengene leses fra `localStorage` etter hydrering (`readScore` i `src/quiz/score.ts`), så den statiske HTML-en aldri viser dem. Kort for quizer utenfor åpningstiden er beskrevet under «Åpningstid».
 
 Siden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller bannermal i storybooken, så `/` låner `data-theme="dark"` på seksjonen (som i footeren i `Bedriftsmarked`) slik at `--jkl-color-*` løses til mørke verdier via `light-dark()`. Tittelen ligger utenfor et kort og får derfor eksplisitt hvit farge. Bakgrunnen er `public/fjell.jpg` som vanlig CSS `background-image` (`fixed`, med skrim) — Jøkuls `Image` kan ikke dekke hele viewporten. `CardImage` får ikke egen `width`, siden den setter negativ margin etter kortets padding.
 

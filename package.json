@@ -16,7 +16,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "check": "node --experimental-strip-types scripts/check-questions.ts",
-        "test": "node --experimental-strip-types scripts/test-quiz-status.ts",
+        "test": "node --experimental-strip-types scripts/test-quiz-status.ts && node --experimental-strip-types scripts/test-scoring.ts",
         "verify": "pnpm typecheck && pnpm format:check && pnpm check && pnpm test && pnpm worker:verify",
         "worker:verify": "pnpm --filter fremtind-games-worker typecheck && pnpm --filter fremtind-games-worker test"
     },

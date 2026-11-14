@@ -5,6 +5,7 @@ import { Card } from "@fremtind/jokul/card";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useEffect, useState } from "react";
+import { formatPoints } from "@/quiz/answers";
 import { LinkButtonGroup } from "@/quiz/LinkButtonGroup";
 import { readScore } from "@/quiz/score";
 import { formatQuizTime, quizStatus, type QuizStatus } from "@/quiz/status";
@@ -68,7 +69,8 @@ const QuizHome = () => {
                     {completed && (
                         <Text>
                             <strong>
-                                Du fikk {state.score} av {quiz.questions.length} riktige
+                                Du fikk {formatPoints(state.score ?? 0)} av {quiz.questions.length}{" "}
+                                poeng
                             </strong>
                         </Text>
                     )}

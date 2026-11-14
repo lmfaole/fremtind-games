@@ -37,6 +37,11 @@ export interface NumberQuestion extends BaseQuestion {
     type: "number";
     label: string;
     answer: number;
+    /**
+     * Største avstand fra svaret som fortsatt gir delpoeng. Poengene synker lineært fra 1 (eksakt)
+     * til 0 (på toleransen). Uten verdi må svaret treffe nøyaktig.
+     */
+    tolerance?: number;
     min?: number;
     max?: number;
 }

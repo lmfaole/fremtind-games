@@ -45,7 +45,7 @@ Settes `NEXT_PUBLIC_API_URL` ved bygg (se `.env.example`), sendes anonyme svar t
 | `pnpm format`       | Formater alle filer med Prettier                                                            |
 | `pnpm format:check` | Sjekk formatering uten å endre filer                                                        |
 | `pnpm check`        | Validerer alle quizer i `src/quizzes/`                                                      |
-| `pnpm test`         | Tester `quizStatus` (åpningstid) i `src/quiz/status.ts`                                     |
+| `pnpm test`         | Tester `quizStatus` (åpningstid) og poengberegningen (`pointsFor`)                          |
 | `pnpm verify`       | Typesjekk, formatsjekk, spørsmålssjekk, `pnpm test` og Worker-tester. Kjør før du committer |
 | `pnpm copy-fonts`   | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `dev`/`build`)                          |
 

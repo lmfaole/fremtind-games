@@ -15,7 +15,7 @@ fremtind.games: statiske quizer (Next.js 15, `output: "export"`, React 19, Jøku
 | `pnpm verify`                     | Typesjekk + `format:check` + `check`. **Kjør før hver commit** |
 | `pnpm format`                     | Formater med Prettier                                          |
 | `pnpm check`                      | Valider alle quizer i `src/quizzes/`                           |
-| `pnpm test`                       | Test `quizStatus` (åpningstid). Inngår i `pnpm verify`         |
+| `pnpm test`                       | Test `quizStatus` og poengberegning. Inngår i `pnpm verify`    |
 | `pnpm build`                      | Statisk eksport til `out/` (CI kjører også denne)              |
 
 ## Filkart
@@ -68,7 +68,7 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 - Spørsmåls-id-er må være globalt unike på tvers av quizer og må aldri endres: backend-statistikken bruker dem som nøkler. `pnpm check` håndhever det.
 - `opens`/`closes` håndheves bare i nettleseren (`QuizGate`, forsiden) og kan omgås med enhetens klokke. Datoene må ha tidssone-offset.
 - `/quiz/…` er gamle URL-er som må fortsette å omdirigere. `app/quiz/[step]` og `app/quizer/[slug]/(steg)/[step]` har hvert sitt segmentnavn på sitt nivå; ikke innfør et annet dynamisk segmentnavn på samme nivå.
-- Svar lagres som `string[]` i `sessionStorage`, også for `choice`, `text` og `number`. `number`-svar sammenlignes numerisk i `isCorrect`.
+- Svar lagres som `string[]` i `sessionStorage`, også for `choice`, `text` og `number`. `number`-svar sammenlignes numerisk. Poeng regnes av `pointsFor` (0–1 per spørsmål, delpoeng på `multi` og `number` med `tolerance`); `isCorrect` betyr full pott.
 - Statistikk styres av `NEXT_PUBLIC_API_URL` ved bygg. Uten den skal alt i `src/analytics/` være no-op. Send aldri lagnavn, medlemmer eller fritekst-label.
 - Jøkul er låst til dist-tag `next`. Ikke bump den ved vanlige oppdateringer.
 

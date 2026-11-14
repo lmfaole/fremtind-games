@@ -146,13 +146,16 @@ for (const quiz of quizzes) {
                 break;
             case "number": {
                 if (isBlank(question.label)) fail(id, "tallspørsmål må ha en `label`.");
-                const { answer, min, max } = question;
+                const { answer, min, max, tolerance } = question;
                 if (typeof answer !== "number" || !Number.isFinite(answer)) {
                     fail(id, "svaret må være et gyldig tall.");
                     break;
                 }
                 if (min !== undefined && max !== undefined && min > max) {
                     fail(id, `min (${min}) er større enn max (${max}).`);
+                }
+                if (tolerance !== undefined && !(Number.isFinite(tolerance) && tolerance > 0)) {
+                    fail(id, "`tolerance` må være et tall større enn 0.");
                 }
                 if (min !== undefined && answer < min) {
                     fail(id, `svaret ${answer} er under min (${min}).`);
