@@ -48,6 +48,10 @@ Arbeidsgrenen er `dev`. `main` er produksjon og oppdateres ved å slå `dev` sam
 | `dev`             | `https://dev.fremtind-games-preview.pages.dev`                    |
 | Pull request/gren | `https://<gren>.fremtind-games-preview.pages.dev` (lenke i PR-en) |
 
+Alle pull requests skal ha `dev` som base. `.github/workflows/guard.yml` feiler en PR mot `main` som ikke kommer fra `dev`, og `preview.yml` kjører bare for PR-er mot `dev`. Hver PR får en kommentar med sin egen forhåndsvisningsadresse, og adressen oppdateres ved nye pushes.
+
+For å tvinge regelen på GitHub: Settings → Branches → legg en regel på `main` med _Require a pull request_ og _Require status checks_ (`Base-gren`), og sett `dev` som standardgren, slik at nye PR-er får riktig base automatisk.
+
 Engangsoppsett:
 
 1. Cloudflare → My Profile → API Tokens: lag et token med _Account · Cloudflare Pages · Edit_.

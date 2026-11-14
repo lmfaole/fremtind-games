@@ -1,0 +1,25 @@
+name: Guard
+
+# Produksjon (`main`) oppdateres bare ved at `dev` slås sammen. Alt annet går via en PR mot `dev`.
+
+on:
+    pull_request:
+        branches: [main]
+
+permissions:
+    contents: read
+
+jobs:
+    base:
+        name: Base-gren
+        runs-on: ubuntu-latest
+        steps:
+            - name: Krev at PR-en mot main kommer fra dev
+              env:
+                  HEAD: ${{ github.head_ref }}
+                  REPO: ${{ github.event.pull_request.head.repo.full_name }}
+              run: |
+                  if [ "$HEAD" != "dev" ] || [ "$REPO" != "${{ github.repository }}" ]; then
+                      echo "::error::PR-er skal ha dev som base. Bare dev → main går mot main."
+                      exit 1
+                  fi
