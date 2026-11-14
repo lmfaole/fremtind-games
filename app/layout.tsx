@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { PostHogInit } from "@/analytics/PostHogInit";
 import { applyStoredBrandScript } from "@/brand";
 import "./globals.scss";
 
@@ -16,7 +17,10 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
         {/* Jøkul legger fontfamilie, sidefarge og tekstfarge på klassen `jkl`,
             ikke på `body`. Uten den arver komponenter som ikke setter egen
             font-family (NavLink, Breadcrumb, Card, Expander …) nettleserfonten. */}
-        <body className="jkl">{children}</body>
+        <body className="jkl">
+            <PostHogInit />
+            {children}
+        </body>
     </html>
 );
 

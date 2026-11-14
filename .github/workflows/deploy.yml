@@ -29,6 +29,8 @@ jobs:
             - run: pnpm build
               env:
                   NEXT_PUBLIC_API_URL: https://api.fremtind.games
+                  # Offentlig, skrivebeskyttet prosjekttoken. Trygt i klientkode.
+                  NEXT_PUBLIC_POSTHOG_TOKEN: phc_tmXRaeuJPXnu2Qy3w9mVYHVJwzjnRAzB7s9mB92c3iMQ
             - uses: actions/configure-pages@v5
             - uses: actions/upload-pages-artifact@v3
               with:

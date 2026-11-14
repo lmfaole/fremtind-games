@@ -11,9 +11,16 @@ import { TextInput } from "@fremtind/jokul/text-input";
 import { Text } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
-import { sendAnswer } from "@/analytics";
+import { sendAnswer, track } from "@/analytics";
 import styles from "./QuestionPage.module.scss";
-import { answerKeys, isAnswered, type Question, questions, sectionOf } from "./questions";
+import {
+    answerKeys,
+    isAnswered,
+    isCorrect,
+    type Question,
+    questions,
+    sectionOf,
+} from "./questions";
 import { readAnswers, saveAnswer } from "./storage";
 
 const emptyMessage = (question: Question) => {
@@ -74,6 +81,12 @@ export const QuestionPage = ({ index }: { index: number }) => {
         if (previous.join("\n") !== current.join("\n")) {
             sendAnswer(question, value);
         }
+        track("question_answered", {
+            question_id: question.id,
+            section: question.section,
+            step: index + 1,
+            correct: isCorrect(question, value),
+        });
 
         saveAnswer(question.id, value);
         next();
@@ -81,6 +94,7 @@ export const QuestionPage = ({ index }: { index: number }) => {
 
     // Et tidligere svar fjernes, slik at resultatet viser «Ikke besvart».
     const skip = () => {
+        track("question_skipped", { question_id: question.id, step: index + 1 });
         saveAnswer(question.id, []);
         next();
     };

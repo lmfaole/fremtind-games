@@ -1,8 +1,10 @@
 import { answerKeys, type Question } from "@/quiz/questions";
 import { analyticsEnabled, API_URL } from "./config";
+import { experimentVariant, track } from "./posthog";
 import { getSessionId } from "./session";
 
 export { analyticsEnabled, MIN_SVAR_FOR_STATISTIKK } from "./config";
+export { getVariant, track } from "./posthog";
 
 export interface QuestionStats {
     total: number;
@@ -31,7 +33,12 @@ export const sendAnswer = (question: Question, value: string[]): void => {
         fetch(`${API_URL}/svar`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sessionId: getSessionId(), questionId: question.id, keys }),
+            body: JSON.stringify({
+                sessionId: getSessionId(),
+                questionId: question.id,
+                keys,
+                variant: experimentVariant(),
+            }),
             // Lar kallet fullføre selv om siden byttes rett etter.
             keepalive: true,
         }).catch(() => {});

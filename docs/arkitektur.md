@@ -70,3 +70,16 @@ Forsiden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller banner
 ## Bredde på inputfelt
 
 Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden, så `app/globals.scss` setter `width: 100%` på `.jkl-text-input-wrapper`, `.jkl-text-area-wrapper` og `.jkl-number-input__wrapper`. Regelen ligger utenfor Jøkuls cascade layers og vinner derfor uavhengig av spesifisitet. `NumberInput` trenger en egen selektor fordi `.jkl-number-input` setter `align-items: flex-start`, som ellers krymper feltet uansett bredde. Selve bredden styres av `.form` i `src/quiz/QuestionPage.module.scss`.
+
+## PostHog (atferdsanalyse og A/B-testing)
+
+`src/analytics/posthog.ts` laster `posthog-js` dynamisk, og bare når `NEXT_PUBLIC_POSTHOG_TOKEN` er satt (tokenet er offentlig og skrivebeskyttet, og ligger i `deploy.yml`). Prosjektet ligger i EU-regionen (`https://eu.i.posthog.com`). Oppsettet er bevisst personvernvennlig:
+
+- `autocapture: false`: bare eksplisitte hendelser, så tekst fra lagnavn- og medlemsfeltene aldri fanges.
+- Ingen session recording, ingen cookies (`persistence: "sessionStorage"`), ingen personprofiler (`person_profiles: "identified_only"`) og `ip: false`.
+- Hendelsene er `$pageview` (automatisk ved sidebytte), `question_answered` (`question_id`, `section`, `step`, `correct`), `question_skipped` og `quiz_finished` (`score`, `total`). Aldri navn eller fritekst.
+- Headless-nettlesere filtreres bort av PostHog som boter. I e2e-tester må `navigator.webdriver` og `navigator.userAgentData` overstyres for at hendelser skal sendes.
+
+### A/B-testing
+
+Lag en feature flag eller et eksperiment i PostHog, og legg flagget i `EXPERIMENT_FLAGS` i `src/analytics/config.ts`. Bruk `getVariant("flagg")` i komponenter for å velge variant. Aktiv variant sendes automatisk som `variant` (f.eks. `layout=b`) med hvert svar til statistikk-API-et, så svar kan krysses mot variant i D1 (se `worker/README.md`). Flaggene lastes asynkront, så `getVariant` gir `undefined` til de er hentet — design varianten med en standardverdi.

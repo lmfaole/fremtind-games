@@ -5,7 +5,7 @@ import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchStats, type Stats } from "@/analytics";
+import { fetchStats, track, type Stats } from "@/analytics";
 import { QuestionStats } from "@/analytics/QuestionStats";
 import { isCorrect, questions, sections } from "@/quiz/questions";
 import styles from "./page.module.scss";
@@ -29,9 +29,11 @@ const ResultPage = () => {
         setAnswers(answers);
         setTeam(readTeamName());
         setMembers(readMembers());
-        setScore(
-            questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length,
-        );
+        const correct = questions.filter((question) =>
+            isCorrect(question, answers[question.id] ?? []),
+        ).length;
+        setScore(correct);
+        track("quiz_finished", { score: correct, total: questions.length });
 
         // Statistikk er kosmetikk: feil gir null og ingenting vises.
         let cancelled = false;
