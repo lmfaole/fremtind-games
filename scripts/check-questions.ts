@@ -2,10 +2,33 @@
 // Bruker `allQuestions` (ikke `questions`), siden sistnevnte filtrerer bort spørsmål med ukjent seksjon.
 // Feilmeldingene peker på quizens slug og spørsmålets id, slik at feilen er lett å finne.
 import { answerKeys, correctValue } from "../src/quiz/answers.ts";
+import { parseQuizTime, quizStatus } from "../src/quiz/status.ts";
+import type { Quiz } from "../src/quiz/types.ts";
 import { quizzes } from "../src/quizzes/index.ts";
 
 const errors: string[] = [];
 const isBlank = (value: unknown) => typeof value !== "string" || value.trim() === "";
+
+const checkWindow = ({ slug, opens, closes }: Quiz) => {
+    const fail = (message: string) => errors.push(`Quiz «${slug}»: ${message}`);
+    const times: Record<string, number | null> = {};
+    for (const [field, value] of [
+        ["opens", opens],
+        ["closes", closes],
+    ] as const) {
+        if (value === undefined) continue;
+        times[field] = typeof value === "string" ? parseQuizTime(value) : null;
+        if (times[field] === null) {
+            fail(
+                `\`${field}\` («${value}») er ikke en gyldig ISO 8601-dato med tidssone, f.eks. «2026-12-01T12:00:00+01:00».`,
+            );
+        }
+    }
+    const { opens: from, closes: to } = times;
+    if (from != null && to != null && from >= to) {
+        fail(`\`opens\` (${opens}) må ligge før \`closes\` (${closes}).`);
+    }
+};
 
 const seenSlugs = new Set<string>();
 // Id-ene er nøkler i statistikk-backenden, så de må være unike på tvers av quizer.
@@ -29,6 +52,7 @@ for (const quiz of quizzes) {
         if (isBlank(quiz[field])) failQuiz(`\`${field}\` er tom.`);
     }
     if (questions.length === 0) failQuiz("har ingen spørsmål.");
+    checkWindow(quiz);
 
     const sectionIds = new Set<string>(sections.map((section) => section.id));
     const seenSectionIds = new Set<string>();
