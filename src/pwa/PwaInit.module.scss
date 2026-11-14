@@ -11,7 +11,13 @@
     margin-inline: auto;
     padding: var(--jkl-spacing-s) var(--jkl-spacing-m);
     border-radius: var(--jkl-spacing-xs);
-    background-color: var(--jkl-color-background-container-high, #fff);
-    color: var(--jkl-color-text-default, #000);
-    box-shadow: 0 2px 12px rgb(0 0 0 / 0.3);
+    // Meldingen ligger utenfor sidens egne temaer og brukte det lyse standardtemaet, mens teksten
+    // arvet hvit farge: hvit tekst på hvit bar. Fast mørk bakgrunn, og `data-theme="dark"` på
+    // elementet gir knappen riktige farger.
+    background-color: #1c1f26;
+    color: #fff;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.5);
+    // Over iOS' hjemindikator.
+    margin-block-end: env(safe-area-inset-bottom);
 }

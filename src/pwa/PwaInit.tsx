@@ -81,7 +81,7 @@ export const PwaInit = () => {
     }
 
     return (
-        <div className={styles.banner} role="status">
+        <div className={styles.banner} role="status" data-theme="dark">
             <Text size="s">Ny versjon tilgjengelig</Text>
             <Button
                 variant="secondary"
