@@ -37,6 +37,7 @@ pnpm dev
         description: "Kort tekst til kortet på forsiden.",
         image: "/min-quiz.jpg",
         imageAlt: "Beskrivelse av bildet",
+        heroImage: "/min-quiz-bakgrunn.jpg",
         opens: "2026-12-01T12:00:00+01:00", // valgfri
         closes: "2026-12-08T12:00:00+01:00", // valgfri
         sections: [{ id: "popkultur", title: "Popkultur" }],
@@ -47,7 +48,7 @@ pnpm dev
     Importer med relative stier og `.ts`-endelse, siden `pnpm check` kjører filen direkte i Node.
 
 2. Registrer quizen i `src/quizzes/index.ts` (importer den og legg den i `quizzes`). Rekkefølgen der er rekkefølgen på forsiden.
-3. Legg bildet i `public/` og pek `image` på det (f.eks. `/min-quiz.jpg`, ca. 1500×2000 eller tilsvarende).
+3. Legg bildene i `public/`. `image` er bildet på quizens kort på forsiden (f.eks. `/min-quiz.jpg`), og `heroImage` er den heldekkende bakgrunnen på quizens egen forside (`/quizer/<slug>/`), gjerne ca. 2000 px bred og komprimert. Begge må finnes; `pnpm check` sjekker det.
 4. Spørsmåls-`id`-er må være unike på tvers av **alle** quizer, ikke bare innenfor én. Backend-statistikken bruker dem som nøkler, så ikke gjenbruk en id fra en annen quiz.
 5. Vil du avgrense når quizen kan startes, sett `opens` og/eller `closes`. Se under.
 6. Kjør `pnpm check`, så `pnpm dev` og klikk deg gjennom quizen, og `pnpm build`.

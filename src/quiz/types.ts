@@ -49,9 +49,11 @@ export interface Quiz {
     slug: string;
     title: string;
     description: string;
-    /** Sti under `public/`, f.eks. `/goteborg.jpg`. */
+    /** Bildet på quizens kort på forsiden. Sti under `public/`, f.eks. `/goteborg.jpg`. */
     image: string;
     imageAlt: string;
+    /** Heldekkende bakgrunn på quizens egen forside (`/quizer/<slug>/`). Sti under `public/`. */
+    heroImage: string;
     sections: Section[];
     /** Spørsmålene i visningsrekkefølge: seksjon for seksjon, i rekkefølgen i `sections`. */
     questions: Question[];

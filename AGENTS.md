@@ -20,28 +20,28 @@ fremtind.games: statiske quizer (Next.js 15, `output: "export"`, React 19, Jøku
 
 ## Filkart
 
-| Sti                          | Innhold                                                                   |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| `src/quizzes/<slug>.ts`      | Én quiz: metadata, seksjoner, spørsmål, valgfri `opens`/`closes`          |
-| `src/quizzes/index.ts`       | `quizzes` (rekkefølgen på forsiden) og `getQuiz(slug)`. Registrer her     |
-| `src/quiz/types.ts`          | `Quiz`, `Question`-typene og `defineQuiz`                                 |
-| `src/quiz/answers.ts`        | `isCorrect`, `isAnswered`, `answerKeys`, `sectionOf`                      |
-| `src/quiz/status.ts`         | `quizStatus` (åpningstid) og datoformatering                              |
-| `src/quiz/QuizGate.tsx`      | Sperrer lag, medlemmer og spørsmål utenfor åpningstiden                   |
-| `src/quiz/QuestionPage.tsx`  | UI for ett spørsmål (klientkomponent)                                     |
-| `src/quiz/storage.ts`        | Lagring per quiz-slug (svar, lagnavn, medlemmer, fullført)                |
-| `src/quiz/score.ts`          | `readScore`: poeng for en fullført quiz, brukt av forsiden                |
-| `src/analytics/`             | Valgfri statistikk: `sendAnswer`, `fetchStats`, `QuestionStats`           |
-| `src/brand.ts`               | Temavalg i `localStorage`                                                 |
-| `app/page.tsx`               | Forside: liste over quizer som `Card`, med heldekkende bakgrunn           |
-| `app/quizer/[slug]/`         | Layout med `generateStaticParams`, indeks, `lag`, `medlemmer`, `resultat` |
-| `app/quizer/[slug]/[step]/`  | Server Component, genererer (slug, steg), videresender til `QuestionPage` |
-| `app/quiz/…`                 | Gamle URL-er: tynne sider som omdirigerer til `/quizer/norge-sverige-1/…` |
-| `app/globals.scss`           | Globale stiler og overstyringer av Jøkul                                  |
-| `scripts/check-questions.ts` | Validering bak `pnpm check`                                               |
-| `scripts/copy-fonts.mjs`     | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `predev`/`prebuild`)  |
-| `.github/workflows/`         | `ci.yml` (verify + build) og `deploy.yml` (GitHub Pages fra `main`)       |
-| `docs/`                      | Arkitektur, Jøkul-fallgruver, deploy                                      |
+| Sti                                | Innhold                                                                            |
+| ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `src/quizzes/<slug>.ts`            | Én quiz: metadata, seksjoner, spørsmål, valgfri `opens`/`closes`                   |
+| `src/quizzes/index.ts`             | `quizzes` (rekkefølgen på forsiden) og `getQuiz(slug)`. Registrer her              |
+| `src/quiz/types.ts`                | `Quiz`, `Question`-typene og `defineQuiz`                                          |
+| `src/quiz/answers.ts`              | `isCorrect`, `isAnswered`, `answerKeys`, `sectionOf`                               |
+| `src/quiz/status.ts`               | `quizStatus` (åpningstid) og datoformatering                                       |
+| `src/quiz/QuizGate.tsx`            | Sperrer lag, medlemmer og spørsmål utenfor åpningstiden                            |
+| `src/quiz/QuestionPage.tsx`        | UI for ett spørsmål (klientkomponent)                                              |
+| `src/quiz/storage.ts`              | Lagring per quiz-slug (svar, lagnavn, medlemmer, fullført)                         |
+| `src/quiz/score.ts`                | `readScore`: poeng for en fullført quiz, brukt av forsiden                         |
+| `src/analytics/`                   | Valgfri statistikk: `sendAnswer`, `fetchStats`, `QuestionStats`                    |
+| `src/brand.ts`                     | Temavalg i `localStorage`                                                          |
+| `app/page.tsx`                     | Forside: liste over quizer som `Card`, med heldekkende bakgrunn                    |
+| `app/quizer/[slug]/`               | Layout med `generateStaticParams`, quizens forside, `lag`, `medlemmer`, `resultat` |
+| `app/quizer/[slug]/(steg)/[step]/` | Server Component, genererer (slug, steg), videresender til `QuestionPage`          |
+| `app/quiz/…`                       | Gamle URL-er: tynne sider som omdirigerer til `/quizer/norge-sverige-1/…`          |
+| `app/globals.scss`                 | Globale stiler og overstyringer av Jøkul                                           |
+| `scripts/check-questions.ts`       | Validering bak `pnpm check`                                                        |
+| `scripts/copy-fonts.mjs`           | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `predev`/`prebuild`)           |
+| `.github/workflows/`               | `ci.yml` (verify + build) og `deploy.yml` (GitHub Pages fra `main`)                |
+| `docs/`                            | Arkitektur, Jøkul-fallgruver, deploy                                               |
 
 Import-alias: `@/*` peker til `src/*`.
 
@@ -56,7 +56,7 @@ Import-alias: `@/*` peker til `src/*`.
 
 Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md](docs/arkitektur.md).
 
-- Jøkul `6.1.0-next.7` har ingen `"use client"`. Sider som bruker Jøkul-komponenter må selv ha `"use client"`, ellers feiler bygget med `useRef is not a function`. Unntak: `app/quizer/[slug]/[step]/page.tsx`, `app/quizer/[slug]/layout.tsx`, `app/quiz/layout.tsx` og `app/quiz/[step]/page.tsx`, som bare bruker egne klientkomponenter.
+- Jøkul `6.1.0-next.7` har ingen `"use client"`. Sider som bruker Jøkul-komponenter må selv ha `"use client"`, ellers feiler bygget med `useRef is not a function`. Unntak: `app/quizer/[slug]/(steg)/[step]/page.tsx`, `app/quizer/[slug]/layout.tsx`, `app/quiz/layout.tsx` og `app/quiz/[step]/page.tsx`, som bare bruker egne klientkomponenter.
 - `Flex asChild` virker ikke i Server Components. Bruk `as="hgroup"` o.l.
 - `<body className="jkl">` i `app/layout.tsx` er påkrevd for font og farger. Ikke fjern.
 - `Flex` mangler `layout`, `center`, `fill` og responsive gaps, og det finnes ingen `Grid`-komponent. Storybook-maler kan ikke kopieres rett. Bruk `display: grid` eller media queries.
@@ -65,7 +65,7 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 - `public/fonts/` er gitignorert og genereres av `prebuild`. Ikke commit den, og ikke fjern hooken.
 - Spørsmåls-id-er må være globalt unike på tvers av quizer og må aldri endres: backend-statistikken bruker dem som nøkler. `pnpm check` håndhever det.
 - `opens`/`closes` håndheves bare i nettleseren (`QuizGate`, forsiden) og kan omgås med enhetens klokke. Datoene må ha tidssone-offset.
-- `/quiz/…` er gamle URL-er som må fortsette å omdirigere. `app/quiz/[step]` og `app/quizer/[slug]/[step]` har hvert sitt segmentnavn på sitt nivå; ikke innfør et annet dynamisk segmentnavn på samme nivå.
+- `/quiz/…` er gamle URL-er som må fortsette å omdirigere. `app/quiz/[step]` og `app/quizer/[slug]/(steg)/[step]` har hvert sitt segmentnavn på sitt nivå; ikke innfør et annet dynamisk segmentnavn på samme nivå.
 - Svar lagres som `string[]` i `sessionStorage`, også for `choice`, `text` og `number`. `number`-svar sammenlignes numerisk i `isCorrect`.
 - Statistikk styres av `NEXT_PUBLIC_API_URL` ved bygg. Uten den skal alt i `src/analytics/` være no-op. Send aldri lagnavn, medlemmer eller fritekst-label.
 - Jøkul er låst til dist-tag `next`. Ikke bump den ved vanlige oppdateringer.

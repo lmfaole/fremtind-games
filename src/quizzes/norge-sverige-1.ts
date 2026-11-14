@@ -15,6 +15,7 @@ export default defineQuiz({
     description: "Popkultur, historie, teknologi og alt annet som binder naboene sammen.",
     image: "/goteborg.jpg",
     imageAlt: "Gothia Towers i Göteborg",
+    heroImage: "/goteborg.jpg",
     sections,
     questions: [
         {

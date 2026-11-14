@@ -1,6 +1,7 @@
 // Validerer alle quizer i src/quizzes/. Kjøres med `pnpm check`.
 // Bruker `allQuestions` (ikke `questions`), siden sistnevnte filtrerer bort spørsmål med ukjent seksjon.
 // Feilmeldingene peker på quizens slug og spørsmålets id, slik at feilen er lett å finne.
+import { existsSync } from "node:fs";
 import { answerKeys, correctValue } from "../src/quiz/answers.ts";
 import { parseQuizTime, quizStatus } from "../src/quiz/status.ts";
 import type { Quiz } from "../src/quiz/types.ts";
@@ -48,8 +49,14 @@ for (const quiz of quizzes) {
     }
     if (seenSlugs.has(slug)) failQuiz("sluggen er brukt av flere quizer.");
     seenSlugs.add(slug);
-    for (const field of ["title", "description", "image", "imageAlt"] as const) {
+    for (const field of ["title", "description", "image", "imageAlt", "heroImage"] as const) {
         if (isBlank(quiz[field])) failQuiz(`\`${field}\` er tom.`);
+    }
+    for (const field of ["image", "heroImage"] as const) {
+        const path = quiz[field];
+        if (!isBlank(path) && !existsSync(new URL(`../public${path}`, import.meta.url))) {
+            failQuiz(`\`${field}\` peker på ${path}, som ikke finnes i public/.`);
+        }
     }
     if (questions.length === 0) failQuiz("har ingen spørsmål.");
     checkWindow(quiz);

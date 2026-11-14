@@ -4,26 +4,26 @@ Hvordan quizen er satt sammen: ruter, spørsmål, seksjoner, lagring og sider. J
 
 ## Ruter
 
-| Rute                       | Innhold                                                   | Fil                                    |
-| -------------------------- | --------------------------------------------------------- | -------------------------------------- |
-| `/`                        | Forside med bakgrunnsbilde, quizkort og temavelger        | `app/page.tsx`                         |
-| `/quizer/<slug>`           | Omdirigerer til `/quizer/<slug>/lag/` i nettleseren       | `app/quizer/[slug]/page.tsx`           |
-| `/quizer/<slug>/lag`       | Lagnavn, før første spørsmål                              | `app/quizer/[slug]/lag/page.tsx`       |
-| `/quizer/<slug>/medlemmer` | Opptil fire lagmedlemmer                                  | `app/quizer/[slug]/medlemmer/page.tsx` |
-| `/quizer/<slug>/1` … `/N`  | Ett spørsmål per side (1-basert)                          | `app/quizer/[slug]/[step]/page.tsx`    |
-| `/quizer/<slug>/resultat`  | Oppsummering, regnet ut fra de lagrede svarene            | `app/quizer/[slug]/resultat/page.tsx`  |
-| `/quiz/…`                  | Gamle URL-er, omdirigerer til `/quizer/norge-sverige-1/…` | `app/quiz/**`                          |
-| `/personvern`              | Personvernerklæring                                       | `app/personvern/page.tsx`              |
+| Rute                       | Innhold                                                   | Fil                                           |
+| -------------------------- | --------------------------------------------------------- | --------------------------------------------- |
+| `/`                        | Forside med bakgrunnsbilde, quizkort og temavelger        | `app/page.tsx`                                |
+| `/quizer/<slug>`           | Quizens forside: beskrivelse, eget bilde, start/resultat  | `app/quizer/[slug]/page.tsx`                  |
+| `/quizer/<slug>/lag`       | Lagnavn, før første spørsmål                              | `app/quizer/[slug]/(steg)/lag/page.tsx`       |
+| `/quizer/<slug>/medlemmer` | Opptil fire lagmedlemmer                                  | `app/quizer/[slug]/(steg)/medlemmer/page.tsx` |
+| `/quizer/<slug>/1` … `/N`  | Ett spørsmål per side (1-basert)                          | `app/quizer/[slug]/(steg)/[step]/page.tsx`    |
+| `/quizer/<slug>/resultat`  | Oppsummering, regnet ut fra de lagrede svarene            | `app/quizer/[slug]/(steg)/resultat/page.tsx`  |
+| `/quiz/…`                  | Gamle URL-er, omdirigerer til `/quizer/norge-sverige-1/…` | `app/quiz/**`                                 |
+| `/personvern`              | Personvernerklæring                                       | `app/personvern/page.tsx`                     |
 
-`app/quizer/[slug]/layout.tsx` er en Server Component med `generateStaticParams` over `quizzes`, og barnesidene (`lag`, `medlemmer`, `resultat`, indeksen) arver sluggen derfra. `[step]` har sin egen `generateStaticParams` som lager alle kombinasjoner av (slug, steg). Klientsidene henter quizen med `useQuiz()` (`useParams` + `getQuiz`). Antall spørsmål følger `quiz.questions`, og `next.config.ts` har `trailingSlash: true`.
+`app/quizer/[slug]/layout.tsx` er en Server Component med `generateStaticParams` over `quizzes`, og barnesidene (forsiden, `lag`, `medlemmer`, `resultat`) arver sluggen derfra. Sidene som viser spørsmål ligger i route-gruppen `(steg)`, hvis layout gir den polstrede `<main>`-rammen; quizens forside ligger utenfor gruppen, siden den er heldekkende og har sin egen `<main>`. Gruppen påvirker ikke URL-ene. `[step]` har sin egen `generateStaticParams` som lager alle kombinasjoner av (slug, steg). Klientsidene henter quizen med `useQuiz()` (`useParams` + `getQuiz`). Antall spørsmål følger `quiz.questions`, og `next.config.ts` har `trailingSlash: true`.
 
-Gamle URL-er (`/quiz/`, `/quiz/lag/`, `/quiz/medlemmer/`, `/quiz/N/`, `/quiz/resultat/`) er tynne sider som viser `Redirect` (`src/quiz/Redirect.tsx`, `router.replace`), siden statisk eksport ikke har omdirigering på serversiden. `app/quiz/[step]` og `app/quizer/[slug]/[step]` ligger på ulike nivåer og har hvert sitt segmentnavn; innfør ikke et annet dynamisk segmentnavn på samme nivå som et eksisterende.
+Gamle URL-er (`/quiz/`, `/quiz/lag/`, `/quiz/medlemmer/`, `/quiz/N/`, `/quiz/resultat/`) er tynne sider som viser `Redirect` (`src/quiz/Redirect.tsx`, `router.replace`), siden statisk eksport ikke har omdirigering på serversiden. `app/quiz/[step]` og `app/quizer/[slug]/(steg)/[step]` ligger på ulike nivåer og har hvert sitt segmentnavn; innfør ikke et annet dynamisk segmentnavn på samme nivå som et eksisterende.
 
 Lagnavn og medlemmer lagres bare i `sessionStorage` og brukes ikke videre.
 
 ## Quizmodell
 
-En quiz er en `Quiz` (`src/quiz/types.ts`): `slug`, `title`, `description`, `image`, `imageAlt`, `sections`, `questions` og valgfri `opens`/`closes`. Hver quiz bor i `src/quizzes/<slug>.ts` og lages med `defineQuiz`, som sorterer spørsmålene etter seksjon (`questions`) og beholder rekkefølgen i filen som `allQuestions`, så `pnpm check` også ser spørsmål med ukjent seksjon. `src/quizzes/index.ts` eksporterer `quizzes` (rekkefølgen på forsiden) og `getQuiz(slug)`. Fellesfunksjonene `isCorrect`, `isAnswered`, `answerKeys` og `sectionOf` ligger i `src/quiz/answers.ts` og tar spørsmål eller quiz som parameter.
+En quiz er en `Quiz` (`src/quiz/types.ts`): `slug`, `title`, `description`, `image` (kortet på forsiden), `imageAlt`, `heroImage` (heldekkende bakgrunn på quizens egen forside), `sections`, `questions` og valgfri `opens`/`closes`. Hver quiz bor i `src/quizzes/<slug>.ts` og lages med `defineQuiz`, som sorterer spørsmålene etter seksjon (`questions`) og beholder rekkefølgen i filen som `allQuestions`, så `pnpm check` også ser spørsmål med ukjent seksjon. `src/quizzes/index.ts` eksporterer `quizzes` (rekkefølgen på forsiden) og `getQuiz(slug)`. Fellesfunksjonene `isCorrect`, `isAnswered`, `answerKeys` og `sectionOf` ligger i `src/quiz/answers.ts` og tar spørsmål eller quiz som parameter.
 
 Filene under `src/quiz/types.ts`, `answers.ts`, `status.ts` og `src/quizzes/` importerer hverandre med relative stier og `.ts`, uten `@/`-aliaset, fordi `pnpm check` og `pnpm test` kjører dem direkte i Node.
 
@@ -48,7 +48,7 @@ Hver quiz har sin egen `sections`-liste (for `norge-sverige-1`: popkultur, histo
 
 ## Én side per spørsmål
 
-Hvert spørsmål har sin egen URL, slik at en refresh ikke starter quizen på nytt. `app/quizer/[slug]/[step]/page.tsx` genererer én statisk side per spørsmål per quiz med `generateStaticParams`, og svarene lagres underveis i `sessionStorage` (`src/quiz/storage.ts`). Resultatsiden regner ut poengsummen fra de lagrede svarene i stedet for å holde den i minnet.
+Hvert spørsmål har sin egen URL, slik at en refresh ikke starter quizen på nytt. `app/quizer/[slug]/(steg)/[step]/page.tsx` genererer én statisk side per spørsmål per quiz med `generateStaticParams`, og svarene lagres underveis i `sessionStorage` (`src/quiz/storage.ts`). Resultatsiden regner ut poengsummen fra de lagrede svarene i stedet for å holde den i minnet.
 
 - `generateStaticParams` kan ikke eksporteres fra en `"use client"`-fil, så rutefilen er en Server Component som bare videresender `slug` og `step` til klientkomponenten `src/quiz/QuestionPage.tsx`. Det er derfor UI-et ligger i `src/` og ikke i rutefilen.
 - Lagrede svar finnes bare i nettleseren. Feltet fylles derfor i en `useEffect` etter hydrering — den statiske HTML-en har alltid tomt felt, slik at server- og klientmarkup er like.

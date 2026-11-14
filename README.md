@@ -5,7 +5,7 @@ En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål o
 | Rute                       | Innhold                                                                                                           |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `/`                        | Forside med liste over alle quizer (kort med bilde, tittel, antall spørsmål, og eventuelt poeng eller åpningstid) |
-| `/quizer/<slug>`           | Omdirigerer til `/quizer/<slug>/lag`                                                                              |
+| `/quizer/<slug>`           | Quizens egen forside: beskrivelse, eget heldekkende bilde og start/resultat                                       |
 | `/quizer/<slug>/lag`       | Lagnavn, før første spørsmål                                                                                      |
 | `/quizer/<slug>/medlemmer` | Opptil fire lagmedlemmer                                                                                          |
 | `/quizer/<slug>/1` … `/N`  | Ett spørsmål per side, én side per spørsmål                                                                       |

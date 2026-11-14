@@ -40,7 +40,7 @@ const Home = () => {
                         const hasWindow = quiz.opens !== undefined || quiz.closes !== undefined;
                         // Fullført quiz viser alltid resultatet. Ellers kan bare en åpen quiz startes.
                         const blocked = score === null && hasWindow && status !== "open";
-                        const href = `/quizer/${quiz.slug}/${score === null ? "lag" : "resultat"}/`;
+                        const href = `/quizer/${quiz.slug}/`;
 
                         const content = (
                             <>
