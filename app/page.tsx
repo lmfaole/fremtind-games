@@ -45,6 +45,11 @@ const Home = () => {
                             onClick: () => router.push("/quiz/lag/"),
                         }}
                     />
+                    <Text size="s" subdued>
+                        <a href="/personvern/" className={styles.link}>
+                            Personvern
+                        </a>
+                    </Text>
                 </Flex>
             </Card>
         </main>

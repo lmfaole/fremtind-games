@@ -1,0 +1,52 @@
+// Jøkul 6.1.0-next.7 har ingen "use client"-direktiver, så komponentene kan ikke
+// rendres i en Server Component.
+"use client";
+import { Flex } from "@fremtind/jokul/flex";
+import { Text, Title } from "@fremtind/jokul/typography";
+import styles from "./page.module.scss";
+
+const Personvern = () => (
+    <main className={styles.page}>
+        <Flex direction="column" gap="m">
+            <Title as="h1" size="l">
+                Personvern
+            </Title>
+            <Text>
+                Quizen samler inn anonym statistikk for å vise hvor mange som har svart hva, og for
+                å forbedre selve quizen. Vi lagrer ingenting i nettleseren din til dette formålet,
+                og vi bruker ikke cookies.
+            </Text>
+            <Title as="h2" size="m">
+                Det vi samler inn
+            </Title>
+            <Text>
+                Hvilke sider som vises, hvilke spørsmål som besvares eller hoppes over, om svaret
+                var riktig, og poengsummen. Svarene sendes uten lagnavn, medlemsnavn og annen tekst
+                du skriver. Hver gjennomspilling får en tilfeldig id som bare finnes mens siden er
+                åpen, og som ikke kan knyttes til deg. IP-adressen din lagres ikke.
+            </Text>
+            <Title as="h2" size="m">
+                Det som blir værende i nettleseren din
+            </Title>
+            <Text>
+                Svarene dine, lagnavn og medlemmer lagres i nettleseren (sessionStorage) mens du
+                spiller, slik at en refresh ikke starter quizen på nytt. Valgt tema lagres også.
+                Dette forlater aldri enheten din, og forsvinner når du lukker fanen (temavalget blir
+                liggende).
+            </Text>
+            <Title as="h2" size="m">
+                Verktøy
+            </Title>
+            <Text>
+                Statistikken om svar lagres i en database hos Cloudflare. Atferdsanalysen går til
+                PostHog (EU-region). Lagnavn og medlemmer deles med SMS-appen din bare hvis du selv
+                velger å sende resultatet.
+            </Text>
+            <a href="/" className={styles.back}>
+                Tilbake til forsiden
+            </a>
+        </Flex>
+    </main>
+);
+
+export default Personvern;

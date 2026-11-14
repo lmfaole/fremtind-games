@@ -21,8 +21,9 @@ export const initPostHog = (): Promise<PostHog | null> => {
                 autocapture: false,
                 capture_pageview: "history_change",
                 disable_session_recording: true,
-                // Ingen cookies og ingen personprofiler: anonym id per fane-økt.
-                persistence: "sessionStorage",
+                // Ingenting lagres i nettleseren (verken cookie eller storage): da trengs ikke
+                // samtykke etter ekomloven § 3-15. Anonym id lever bare til siden lastes på nytt.
+                persistence: "memory",
                 person_profiles: "identified_only",
                 ip: false,
             });

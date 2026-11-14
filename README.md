@@ -10,6 +10,7 @@ En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål o
 | `/quiz/medlemmer` | Opptil fire lagmedlemmer. Sendes med i SMS-en                            |
 | `/quiz/1` … `/18` | Ett spørsmål per side, én side per spørsmål                              |
 | `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene. Viser valgfri statistikk |
+| `/personvern`     | Personvernerklæring (hva som samles inn)                                 |
 
 ## Kom i gang
 

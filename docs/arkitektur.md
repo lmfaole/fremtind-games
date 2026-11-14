@@ -43,13 +43,12 @@ Hvert spørsmål har sin egen URL, slik at en refresh ikke starter quizen på ny
 
 Alt ligger i nettleseren, og alle lese- og skrivefunksjoner tåler at lagring er blokkert.
 
-| Nøkkel                     | Lager            | Innhold                               | Fil                        |
-| -------------------------- | ---------------- | ------------------------------------- | -------------------------- |
-| `fremtind-games:svar`      | `sessionStorage` | `Record<spørsmåls-id, string[]>`      | `src/quiz/storage.ts`      |
-| `fremtind-games:lag`       | `sessionStorage` | Lagnavn (`string`)                    | `src/quiz/storage.ts`      |
-| `fremtind-games:medlemmer` | `sessionStorage` | Medlemmer (`string[]`)                | `src/quiz/storage.ts`      |
-| `fremtind-games:sessionId` | `sessionStorage` | Anonym UUID for statistikk            | `src/analytics/session.ts` |
-| `fremtind-games:brand`     | `localStorage`   | Valgt tema (`data-brand` på `<html>`) | `src/brand.ts`             |
+| Nøkkel                     | Lager            | Innhold                               | Fil                   |
+| -------------------------- | ---------------- | ------------------------------------- | --------------------- |
+| `fremtind-games:svar`      | `sessionStorage` | `Record<spørsmåls-id, string[]>`      | `src/quiz/storage.ts` |
+| `fremtind-games:lag`       | `sessionStorage` | Lagnavn (`string`)                    | `src/quiz/storage.ts` |
+| `fremtind-games:medlemmer` | `sessionStorage` | Medlemmer (`string[]`)                | `src/quiz/storage.ts` |
+| `fremtind-games:brand`     | `localStorage`   | Valgt tema (`data-brand` på `<html>`) | `src/brand.ts`        |
 
 ## Statistikk
 
@@ -57,7 +56,7 @@ Alt ligger i nettleseren, og alle lese- og skrivefunksjoner tåler at lagring er
 
 - `sendAnswer(question, value)` kalles ved «Fortsett» i `QuestionPage`, og bare når svaret er nytt eller endret siden sist (så tilbake/frem ikke dobbeltsender). «Hopp over» og tomme svar sendes ikke. Kallet er fire-and-forget (`fetch` med `keepalive`, feil svelges) og blokkerer aldri navigasjon.
 - `POST {API}/svar` med `{ sessionId, questionId, keys }`. `keys` kommer fra `answerKeys` i `src/quiz/questions.ts`: valgt alternativ (choice), ett element per valgt alternativ (multi), normalisert tekst (text, samme `normalize` som `isCorrect`) eller tallet som streng (number).
-- `sessionId` er en tilfeldig UUID i `sessionStorage` (`fremtind-games:sessionId`). Den kobles aldri til lagnavn eller medlemmer, og de sendes aldri. Det samme gjelder fritekst-`label`en.
+- `sessionId` er en tilfeldig UUID som bare ligger i minnet (`src/analytics/session.ts`), ikke i nettleserens lagring. Den kobles aldri til lagnavn eller medlemmer, og de sendes aldri. Det samme gjelder fritekst-`label`en.
 - `fetchStats()` henter `GET {API}/statistikk` med 4 sekunders timeout og gir `null` ved feil. Resultatsiden viser prosenter per spørsmål (`QuestionStats`) bare når `total >= MIN_SVAR_FOR_STATISTIKK` (20). Statistikken påvirker ikke poengberegningen.
 - `pnpm check` verifiserer at fasitsvaret gir en svarnøkkel som finnes blant alternativene (choice/multi).
 
@@ -76,10 +75,20 @@ Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden
 `src/analytics/posthog.ts` laster `posthog-js` dynamisk, og bare når `NEXT_PUBLIC_POSTHOG_TOKEN` er satt (tokenet er offentlig og skrivebeskyttet, og ligger i `deploy.yml`). Prosjektet ligger i EU-regionen (`https://eu.i.posthog.com`). Oppsettet er bevisst personvernvennlig:
 
 - `autocapture: false`: bare eksplisitte hendelser, så tekst fra lagnavn- og medlemsfeltene aldri fanges.
-- Ingen session recording, ingen cookies (`persistence: "sessionStorage"`), ingen personprofiler (`person_profiles: "identified_only"`) og `ip: false`.
+- Ingen session recording, ingenting i nettleserens lagring (`persistence: "memory"`), ingen personprofiler (`person_profiles: "identified_only"`) og `ip: false`.
 - Hendelsene er `$pageview` (automatisk ved sidebytte), `question_answered` (`question_id`, `section`, `step`, `correct`), `question_skipped` og `quiz_finished` (`score`, `total`). Aldri navn eller fritekst.
 - Headless-nettlesere filtreres bort av PostHog som boter. I e2e-tester må `navigator.webdriver` og `navigator.userAgentData` overstyres for at hendelser skal sendes.
 
 ### A/B-testing
 
 Lag en feature flag eller et eksperiment i PostHog, og legg flagget i `EXPERIMENT_FLAGS` i `src/analytics/config.ts`. Bruk `getVariant("flagg")` i komponenter for å velge variant. Aktiv variant sendes automatisk som `variant` (f.eks. `layout=b`) med hvert svar til statistikk-API-et, så svar kan krysses mot variant i D1 (se `worker/README.md`). Flaggene lastes asynkront, så `getVariant` gir `undefined` til de er hentet — design varianten med en standardverdi.
+
+### Samtykke: ingen banner
+
+Analyse er ikke «nødvendig funksjonalitet» etter ekomloven § 3-15, så lagring eller lesing på enheten (cookie, `sessionStorage`, `localStorage`) til statistikk krever samtykke. Løsningen unngår det ved å **ikke lagre noe på enheten til analyse eller statistikk**: PostHog bruker `persistence: "memory"`, og `sessionId` ligger i en modulvariabel. Det som ligger i `sessionStorage`/`localStorage` (svar, lagnavn, medlemmer, tema) er nødvendig funksjonalitet.
+
+Følger for utviklere:
+
+- Innfør ikke noe som skriver til cookie, `sessionStorage` eller `localStorage` for analyse, A/B-variant eller statistikk uten å ta samtykke inn i planen. En A/B-variant må derfor leve i minnet (PostHog-flagg gjør det) og kan ikke ligge i `localStorage`.
+- Konsekvensen er at en refresh gir ny anonym bruker. Dobbelttelling av svar hindres av at `QuestionPage` bare sender svar som er nye eller endret siden det lagrede svaret.
+- Personvernerklæringen ligger på `/personvern/` (`app/personvern/page.tsx`) og må oppdateres hvis innsamlingen endres.

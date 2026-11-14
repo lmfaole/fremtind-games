@@ -60,7 +60,7 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 - Statistikk styres av `NEXT_PUBLIC_API_URL` ved bygg. Uten den skal alt i `src/analytics/` være no-op. Send aldri lagnavn, medlemmer eller fritekst-label.
 - Jøkul er låst til dist-tag `next`. Ikke bump den ved vanlige oppdateringer.
 
-- PostHog: bare eksplisitte hendelser via `track()` i `src/analytics`. Aldri send lagnavn, medlemsnavn eller fritekst. Se [docs/arkitektur.md](docs/arkitektur.md#posthog-atferdsanalyse-og-ab-testing).
+- PostHog: bare eksplisitte hendelser via `track()` i `src/analytics`. Aldri send lagnavn, medlemsnavn eller fritekst, og aldri lagre noe i cookie/`sessionStorage`/`localStorage` til analyse (ingen samtykkebanner, se docs). Se [docs/arkitektur.md](docs/arkitektur.md#posthog-atferdsanalyse-og-ab-testing).
 
 ## Regler
 
