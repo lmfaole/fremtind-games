@@ -11,8 +11,9 @@ import { TextInput } from "@fremtind/jokul/text-input";
 import { Text } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
+import { sendAnswer } from "@/analytics";
 import styles from "./QuestionPage.module.scss";
-import { isAnswered, type Question, questions, sectionOf } from "./questions";
+import { answerKeys, isAnswered, type Question, questions, sectionOf } from "./questions";
 import { readAnswers, saveAnswer } from "./storage";
 
 const emptyMessage = (question: Question) => {
@@ -65,6 +66,13 @@ export const QuestionPage = ({ index }: { index: number }) => {
         if (!isAnswered(value)) {
             setError(emptyMessage(question));
             return;
+        }
+
+        // Bare nye eller endrede svar sendes, så tilbake/frem ikke gir dobbeltsending.
+        const previous = answerKeys(question, readAnswers()[question.id] ?? []);
+        const current = answerKeys(question, value);
+        if (previous.join("\n") !== current.join("\n")) {
+            sendAnswer(question, value);
         }
 
         saveAnswer(question.id, value);
