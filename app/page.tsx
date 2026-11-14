@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
 import { InstallPrompt } from "@/pwa/InstallPrompt";
+import { PushPrompt } from "@/pwa/PushPrompt";
 import { readCompleted } from "@/quiz/storage";
 import styles from "./page.module.scss";
 
@@ -53,6 +54,7 @@ const Home = () => {
                         }}
                     />
                     <InstallPrompt />
+                    <PushPrompt />
                     <Text size="s" subdued>
                         <a href="/personvern/" className={styles.link}>
                             Personvern

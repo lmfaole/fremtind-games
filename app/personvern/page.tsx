@@ -46,6 +46,16 @@ const Personvern = () => (
                 uten noe som kan knyttes til deg. Svar gitt uten nett blir ikke med i statistikken.
             </Text>
             <Title as="h2" size="m">
+                Varsler
+            </Title>
+            <Text>
+                Varsler er frivillige og slås på med en knapp på forsiden. Når du sier ja, lagrer vi
+                adressen nettleseren din gir oss for varsler, sammen med nøklene som trengs for å
+                sende dem. Det er en teknisk enhets-id hos nettleserleverandøren, og den kobles ikke
+                til lagnavn, medlemmer, svar eller IP-adresse. Du kan slå varsler av med samme
+                knapp, da slettes den hos oss.
+            </Text>
+            <Title as="h2" size="m">
                 Verktøy
             </Title>
             <Text>
