@@ -1,0 +1,27 @@
+.hero {
+    position: relative;
+    box-sizing: border-box;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--jkl-spacing-l);
+    // Reservefarge til bildet er lastet. Selve bildet settes per quiz (`heroImage`).
+    background-color: #0e0d0c;
+    background-size: cover;
+    background-position: center;
+}
+
+// Demper lyse partier i fotografiet, slik at kortet leses tydelig.
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgb(14 13 12 / 0.35);
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+}

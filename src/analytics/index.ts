@@ -1,4 +1,5 @@
-import { answerKeys, type Question } from "@/quiz/questions";
+import { answerKeys } from "@/quiz/answers";
+import type { Question } from "@/quiz/types";
 import { analyticsEnabled, API_URL } from "./config";
 import { experimentVariant, track } from "./posthog";
 import { getSessionId } from "./session";

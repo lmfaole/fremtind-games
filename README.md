@@ -2,15 +2,16 @@
 
 En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål om gangen. Bygget med [Jøkul](https://jokul.fremtind.no) og Next.js, og publisert som statiske filer til GitHub Pages på [fremtind.games](https://fremtind.games).
 
-| Rute              | Innhold                                                                  |
-| ----------------- | ------------------------------------------------------------------------ |
-| `/`               | Forside med heldekkende bakgrunnsbilde fra Göteborg                      |
-| `/quiz`           | Omdirigerer til `/quiz/lag`                                              |
-| `/quiz/lag`       | Lagnavn, før første spørsmål                                             |
-| `/quiz/medlemmer` | Opptil fire lagmedlemmer                                                 |
-| `/quiz/1` … `/18` | Ett spørsmål per side, én side per spørsmål                              |
-| `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene. Viser valgfri statistikk |
-| `/personvern`     | Personvernerklæring (hva som samles inn)                                 |
+| Rute                       | Innhold                                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `/`                        | Forside med liste over alle quizer (kort med bilde, tittel, antall spørsmål, og eventuelt poeng eller åpningstid) |
+| `/quizer/<slug>`           | Quizens egen forside: beskrivelse, eget heldekkende bilde og start/resultat                                       |
+| `/quizer/<slug>/lag`       | Lagnavn, før første spørsmål                                                                                      |
+| `/quizer/<slug>/medlemmer` | Opptil fire lagmedlemmer                                                                                          |
+| `/quizer/<slug>/1` … `/N`  | Ett spørsmål per side, én side per spørsmål                                                                       |
+| `/quizer/<slug>/resultat`  | Oppsummering, regnet ut fra de lagrede svarene. Viser valgfri statistikk                                          |
+| `/quiz/…`                  | Gamle URL-er. Omdirigerer til tilsvarende `/quizer/norge-sverige-1/…`                                             |
+| `/personvern`              | Personvernerklæring (hva som samles inn)                                                                          |
 
 ## Kom i gang
 
@@ -25,23 +26,28 @@ pnpm dev
 
 Nettstedet kan installeres som app og fungerer uten nett (alle sider forhåndslastes). Service workeren `sw.js` genereres av `postbuild` (`scripts/build-sw.mjs`, fra `scripts/sw.template.js`) og registreres bare i produksjonsbygg. `pnpm dev` har ingen service worker. For å teste offline: `pnpm build`, server `out/` (f.eks. `npx serve out`) og slå av nettet i DevTools. Manifest: `app/manifest.ts`, ikoner: `public/icons` (generert med `scripts/generate-icons.py`). Varsler (Web Push) slås på med knappen på forsiden og krever `NEXT_PUBLIC_VAPID_PUBLIC_KEY` ved bygg samt Workeren med VAPID-secrets (se [worker/README.md](worker/README.md)). Se [docs/arkitektur.md](docs/arkitektur.md#pwa-og-offline).
 
+## Flere quizer og åpningstid
+
+Hver quiz er en fil i `src/quizzes/` og har egen URL under `/quizer/<slug>/`. En quiz kan ha `opens` og `closes`, og kan da bare startes i det tidsrommet. Dette håndheves i nettleseren og kan omgås ved å endre enhetens klokke. Se [CONTRIBUTING.md](CONTRIBUTING.md#legge-til-en-ny-quiz) og [docs/arkitektur.md](docs/arkitektur.md#åpningstid).
+
 ## Statistikk (valgfritt)
 
 Settes `NEXT_PUBLIC_API_URL` ved bygg (se `.env.example`), sendes anonyme svar til den adressen og resultatsiden viser hvor mange andre som svarte hva. Uten variabelen skjer ingen nettverkskall og ingenting vises. Se [docs/arkitektur.md](docs/arkitektur.md#statistikk).
 
 ## Kommandoer
 
-| Kommando            | Beskrivelse                                                                    |
-| ------------------- | ------------------------------------------------------------------------------ |
-| `pnpm dev`          | Utviklingsserver på http://localhost:3000                                      |
-| `pnpm build`        | Statisk eksport til `out/`                                                     |
-| `pnpm start`        | Next.js sin produksjonsserver (`next start`)                                   |
-| `pnpm typecheck`    | Typesjekk uten å bygge                                                         |
-| `pnpm format`       | Formater alle filer med Prettier                                               |
-| `pnpm format:check` | Sjekk formatering uten å endre filer                                           |
-| `pnpm check`        | Validerer spørsmålene i `src/quiz/questions.ts`                                |
-| `pnpm verify`       | Typesjekk, formatsjekk, spørsmålssjekk og Worker-tester. Kjør før du committer |
-| `pnpm copy-fonts`   | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `dev`/`build`)             |
+| Kommando            | Beskrivelse                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| `pnpm dev`          | Utviklingsserver på http://localhost:3000                                                   |
+| `pnpm build`        | Statisk eksport til `out/`                                                                  |
+| `pnpm start`        | Next.js sin produksjonsserver (`next start`)                                                |
+| `pnpm typecheck`    | Typesjekk uten å bygge                                                                      |
+| `pnpm format`       | Formater alle filer med Prettier                                                            |
+| `pnpm format:check` | Sjekk formatering uten å endre filer                                                        |
+| `pnpm check`        | Validerer alle quizer i `src/quizzes/`                                                      |
+| `pnpm test`         | Tester `quizStatus` (åpningstid) i `src/quiz/status.ts`                                     |
+| `pnpm verify`       | Typesjekk, formatsjekk, spørsmålssjekk, `pnpm test` og Worker-tester. Kjør før du committer |
+| `pnpm copy-fonts`   | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `dev`/`build`)                          |
 
 ## Dokumentasjon
 
