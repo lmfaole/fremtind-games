@@ -30,8 +30,15 @@ const Home = () => {
     }, []);
 
     return (
-        <main className={styles.page} data-theme="dark">
-            <Flex direction="column" gap="l" className={styles.content}>
+        <div className={styles.page} data-theme="dark">
+            <header className={styles.header}>
+                <div className={styles.bar}>
+                    <Text className={styles.brand}>
+                        <strong>fremtind.games</strong>
+                    </Text>
+                </div>
+            </header>
+            <main className={`${styles.bar} ${styles.main}`}>
                 <Title as="h1" size="xl" className={styles.title}>
                     Velg en quiz
                 </Title>
@@ -98,7 +105,13 @@ const Home = () => {
                         );
                     })}
                 </ul>
-                <Flex direction="column" gap="s" className={styles.footer}>
+            </main>
+            <footer className={styles.footer}>
+                <Flex
+                    direction="column"
+                    gap="s"
+                    className={`${styles.bar} ${styles.footerContent}`}
+                >
                     <Select
                         label="Velg tema"
                         width="100%"
@@ -117,8 +130,8 @@ const Home = () => {
                         </a>
                     </Text>
                 </Flex>
-            </Flex>
-        </main>
+            </footer>
+        </div>
     );
 };
 

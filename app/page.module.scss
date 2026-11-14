@@ -2,7 +2,8 @@
     position: relative;
     box-sizing: border-box;
     min-height: 100svh;
-    padding: var(--jkl-spacing-l);
+    display: flex;
+    flex-direction: column;
     // Reservefarge til bildet er lastet.
     background-color: #0e0d0c;
     background-image: url("/fjell.jpg");
@@ -20,10 +21,46 @@
     pointer-events: none;
 }
 
-.content {
+// Header og footer har egen, tett bakgrunn, så teksten alltid leses uavhengig av bildet.
+.header,
+.footer {
     position: relative;
+    background-color: rgb(14 13 12 / 0.92);
+    backdrop-filter: blur(8px);
+    color: #fff;
+}
+
+.header {
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+    // Plass til statuslinjen i installert PWA (black-translucent).
+    padding-top: env(safe-area-inset-top);
+}
+
+.footer {
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bar {
+    box-sizing: border-box;
+    width: 100%;
     max-width: 64rem;
     margin: 0 auto;
+    padding: var(--jkl-spacing-m) var(--jkl-spacing-l);
+}
+
+.brand {
+    color: #fff;
+}
+
+.main {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--jkl-spacing-l);
+    padding-top: var(--jkl-spacing-xl);
+    padding-bottom: var(--jkl-spacing-xl);
 }
 
 .list {
@@ -46,8 +83,13 @@
     object-fit: cover;
 }
 
-.footer {
-    max-width: 20rem;
+.footerContent {
+    padding-top: var(--jkl-spacing-l);
+    padding-bottom: var(--jkl-spacing-l);
+
+    > * {
+        max-width: 20rem;
+    }
 }
 
 .link {
