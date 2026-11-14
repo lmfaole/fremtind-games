@@ -5,6 +5,8 @@ import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { fetchStats, type Stats } from "@/analytics";
+import { QuestionStats } from "@/analytics/QuestionStats";
 import { isCorrect, questions, sections } from "@/quiz/questions";
 import styles from "./page.module.scss";
 import { clearAnswers, readAnswers, readMembers, readTeamName } from "@/quiz/storage";
@@ -20,6 +22,7 @@ const ResultPage = () => {
     const [answers, setAnswers] = useState<Record<string, string[]>>({});
     const [team, setTeam] = useState("");
     const [members, setMembers] = useState<string[]>([]);
+    const [stats, setStats] = useState<Stats | null>(null);
 
     useEffect(() => {
         const answers = readAnswers();
@@ -29,6 +32,15 @@ const ResultPage = () => {
         setScore(
             questions.filter((question) => isCorrect(question, answers[question.id] ?? [])).length,
         );
+
+        // Statistikk er kosmetikk: feil gir null og ingenting vises.
+        let cancelled = false;
+        fetchStats().then((result) => {
+            if (!cancelled) setStats(result);
+        });
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const restart = () => {
@@ -80,6 +92,11 @@ const ResultPage = () => {
                                                     "Ikke besvart"}
                                             </Text>
                                             <Text>Fasit: {formatAnswer(question.answer)}</Text>
+                                            <QuestionStats
+                                                question={question}
+                                                value={answers[question.id] ?? []}
+                                                stats={stats?.[question.id]}
+                                            />
                                         </li>
                                     ))}
                                 </Flex>
