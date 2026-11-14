@@ -35,6 +35,11 @@ const QuizHome = () => {
         });
     }, [quiz]);
 
+    // Vanlig sidelasting i stedet for klientnavigasjon: direkte lenker til disse sidene virker,
+    // mens knappene endte på 404 på fremtind.games. Årsaken er ikke funnet; dette omgår
+    // klientnavigasjonens datakall (`index.txt`).
+    const go = (href: string) => window.location.assign(href);
+
     const completed = state?.score != null;
     const canStart =
         state !== undefined && !completed && (state.status === "open" || state.started);
@@ -47,13 +52,13 @@ const QuizHome = () => {
               ? {
                     type: "button" as const,
                     children: "Se resultatet ditt",
-                    onClick: () => router.push(`/quizer/${quiz.slug}/resultat/`),
+                    onClick: () => go(`/quizer/${quiz.slug}/resultat/`),
                 }
               : canStart
                 ? {
                       type: "button" as const,
                       children: state.started ? "Fortsett quizen" : "Start quizen",
-                      onClick: () => router.push(`/quizer/${quiz.slug}/lag/`),
+                      onClick: () => go(`/quizer/${quiz.slug}/lag/`),
                   }
                 : undefined;
 
