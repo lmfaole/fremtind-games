@@ -1,10 +1,12 @@
 @use "@fremtind/jokul/styles/base.scss";
 @use "@fremtind/jokul/styles/components.scss";
 
-// Alle sider bruker dvh. Blandes det med svh, blir sidene scrollbare med en svart stripe nederst
-// (kroppens bakgrunn) når nettleserens verktøylinje skjules.
+// Sidene fyller viewporten med `min-height: 100%` mot en html/body på 100 % høyde, ikke med
+// svh/dvh/vh. I en installert app (standalone) regnes disse enhetene av og til med systemfeltene,
+// og sidene blir da scrollbare med en stripe av kroppens bakgrunn nederst.
+html,
 body {
-    min-height: 100dvh;
+    height: 100%;
 }
 
 // Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle
