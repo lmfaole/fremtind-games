@@ -1,0 +1,17 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "fremtind-games-api",
+    "main": "src/index.ts",
+    "compatibility_date": "2025-01-01",
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "fremtind-games",
+            // PLASSHOLDER: bytt med id fra `wrangler d1 create fremtind-games`
+            "database_id": "00000000-0000-0000-0000-000000000000",
+            "migrations_dir": "migrations",
+        },
+    ],
+    // Eget domene (krever at fremtind.games ligger i Cloudflare):
+    // "routes": [{ "pattern": "api.fremtind.games", "custom_domain": true }]
+}
