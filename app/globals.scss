@@ -1,6 +1,8 @@
 @use "@fremtind/jokul/styles/base.scss";
 @use "@fremtind/jokul/styles/components.scss";
 
+// Alle sider bruker dvh. Blandes det med svh, blir sidene scrollbare med en svart stripe nederst
+// (kroppens bakgrunn) når nettleserens verktøylinje skjules.
 body {
     min-height: 100dvh;
 }
