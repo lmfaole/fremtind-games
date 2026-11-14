@@ -4,7 +4,7 @@ Instruksjoner for KI-agenter og andre som jobber i repoet. Mer detaljer: [CONTRI
 
 ## Hva er dette
 
-fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøkul, SCSS) om Norge og Sveriges popkultur og historie. Ett spørsmål per side, svar lagres i nettleseren, resultat sendes på SMS. Språk i UI og kode-kommentarer er norsk. Pakkebehandler: pnpm, Node 22.
+fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøkul, SCSS) om Norge og Sveriges popkultur og historie. Ett spørsmål per side, svar lagres i nettleseren, quizen kan bare tas én gang per nettleser. Språk i UI og kode-kommentarer er norsk. Pakkebehandler: pnpm, Node 22.
 
 ## Kommandoer
 
@@ -29,7 +29,7 @@ fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøku
 | `app/page.tsx`               | Forside                                                                   |
 | `app/quiz/lag`, `medlemmer`  | Lagnavn og medlemmer                                                      |
 | `app/quiz/[step]/page.tsx`   | Server Component, `generateStaticParams`, videresender til `QuestionPage` |
-| `app/quiz/resultat/page.tsx` | Poeng, fasit og SMS-lenke                                                 |
+| `app/quiz/resultat/page.tsx` | Poeng, fasit og statistikk. Låser quizen når alt er besvart               |
 | `app/globals.scss`           | Globale stiler og overstyringer av Jøkul                                  |
 | `scripts/check-questions.ts` | Validering bak `pnpm check`                                               |
 | `scripts/copy-fonts.mjs`     | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `predev`/`prebuild`)  |

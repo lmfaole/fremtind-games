@@ -9,13 +9,18 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
+import { readCompleted } from "@/quiz/storage";
 import styles from "./page.module.scss";
 
 const Home = () => {
     const router = useRouter();
     const [brand, setBrandState] = useState("");
+    const [completed, setCompleted] = useState(false);
 
-    useEffect(() => setBrandState(readBrand()), []);
+    useEffect(() => {
+        setBrandState(readBrand());
+        setCompleted(readCompleted() !== null);
+    }, []);
 
     return (
         <main className={styles.hero} data-theme="dark">
@@ -41,8 +46,9 @@ const Home = () => {
                     <ButtonGroup
                         mainAction={{
                             type: "button",
-                            children: "Start quizen",
-                            onClick: () => router.push("/quiz/lag/"),
+                            children: completed ? "Se resultatet ditt" : "Start quizen",
+                            onClick: () =>
+                                router.push(completed ? "/quiz/resultat/" : "/quiz/lag/"),
                         }}
                     />
                     <Text size="s" subdued>

@@ -13,7 +13,7 @@ Hvordan quizen er satt sammen: ruter, spørsmål, seksjoner, lagring og sider. J
 | `/quiz/1` … `/18` | Ett spørsmål per side                                 | `app/quiz/[step]/page.tsx`    |
 | `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene        | `app/quiz/resultat/page.tsx`  |
 
-Lagnavn og medlemmer sendes med i SMS-en fra resultatsiden. Antall spørsmål følger `questions` i `src/quiz/questions.ts`, og `next.config.ts` har `trailingSlash: true`.
+Lagnavn og medlemmer lagres bare i `sessionStorage` og brukes ikke videre. Antall spørsmål følger `questions` i `src/quiz/questions.ts`, og `next.config.ts` har `trailingSlash: true`.
 
 ## Spørsmål
 
@@ -43,12 +43,13 @@ Hvert spørsmål har sin egen URL, slik at en refresh ikke starter quizen på ny
 
 Alt ligger i nettleseren, og alle lese- og skrivefunksjoner tåler at lagring er blokkert.
 
-| Nøkkel                     | Lager            | Innhold                               | Fil                   |
-| -------------------------- | ---------------- | ------------------------------------- | --------------------- |
-| `fremtind-games:svar`      | `sessionStorage` | `Record<spørsmåls-id, string[]>`      | `src/quiz/storage.ts` |
-| `fremtind-games:lag`       | `sessionStorage` | Lagnavn (`string`)                    | `src/quiz/storage.ts` |
-| `fremtind-games:medlemmer` | `sessionStorage` | Medlemmer (`string[]`)                | `src/quiz/storage.ts` |
-| `fremtind-games:brand`     | `localStorage`   | Valgt tema (`data-brand` på `<html>`) | `src/brand.ts`        |
+| Nøkkel                     | Lager            | Innhold                                | Fil                   |
+| -------------------------- | ---------------- | -------------------------------------- | --------------------- |
+| `fremtind-games:svar`      | `sessionStorage` | `Record<spørsmåls-id, string[]>`       | `src/quiz/storage.ts` |
+| `fremtind-games:lag`       | `sessionStorage` | Lagnavn (`string`)                     | `src/quiz/storage.ts` |
+| `fremtind-games:medlemmer` | `sessionStorage` | Medlemmer (`string[]`)                 | `src/quiz/storage.ts` |
+| `fremtind-games:fullfort`  | `localStorage`   | Fullført resultat (svar), låser quizen | `src/quiz/storage.ts` |
+| `fremtind-games:brand`     | `localStorage`   | Valgt tema (`data-brand` på `<html>`)  | `src/brand.ts`        |
 
 ## Statistikk
 
@@ -92,3 +93,9 @@ Følger for utviklere:
 - Innfør ikke noe som skriver til cookie, `sessionStorage` eller `localStorage` for analyse, A/B-variant eller statistikk uten å ta samtykke inn i planen. En A/B-variant må derfor leve i minnet (PostHog-flagg gjør det) og kan ikke ligge i `localStorage`.
 - Konsekvensen er at en refresh gir ny anonym bruker. Dobbelttelling av svar hindres av at `QuestionPage` bare sender svar som er nye eller endret siden det lagrede svaret.
 - Personvernerklæringen ligger på `/personvern/` (`app/personvern/page.tsx`) og må oppdateres hvis innsamlingen endres.
+
+### Bare én gjennomspilling
+
+Når resultatsiden åpnes med et svar (også tomt, fra «Hopp over») på alle spørsmål, lagres svarene i `localStorage` (`fremtind-games:fullfort`) og `quiz_finished` sendes. Deretter sender `useCompletedRedirect` (`src/quiz/useCompletedRedirect.ts`) alle quizsider (`/quiz/lag`, `/quiz/medlemmer`, `/quiz/N`) til `/quiz/resultat/`, resultatsiden leser det lagrede resultatet, og forsiden viser «Se resultatet ditt» i stedet for «Start quizen». Det finnes ingen «Prøv igjen».
+
+Begrensninger: dette er ren klientside-håndheving uten innlogging, så det kan omgås med en annen nettleser, privat modus eller tømt lagring. Det er heller ikke nødvendig funksjonalitet i samtykke-forstand (§ 3-15), selv om det ikke brukes til analyse; få dette vurdert hvis dere er usikre.

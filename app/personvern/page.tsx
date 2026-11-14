@@ -30,17 +30,17 @@ const Personvern = () => (
             </Title>
             <Text>
                 Svarene dine, lagnavn og medlemmer lagres i nettleseren (sessionStorage) mens du
-                spiller, slik at en refresh ikke starter quizen på nytt. Valgt tema lagres også.
-                Dette forlater aldri enheten din, og forsvinner når du lukker fanen (temavalget blir
-                liggende).
+                spiller, slik at en refresh ikke starter quizen på nytt. Når du er ferdig, lagres
+                svarene dine også varig i nettleseren (localStorage), slik at quizen bare kan tas én
+                gang og du kan se resultatet ditt igjen. Valgt tema lagres også. Dette forlater
+                aldri enheten din.
             </Text>
             <Title as="h2" size="m">
                 Verktøy
             </Title>
             <Text>
                 Statistikken om svar lagres i en database hos Cloudflare. Atferdsanalysen går til
-                PostHog (EU-region). Lagnavn og medlemmer deles med SMS-appen din bare hvis du selv
-                velger å sende resultatet.
+                PostHog (EU-region). Lagnavn og medlemmer forlater aldri enheten din.
             </Text>
             <a href="/" className={styles.back}>
                 Tilbake til forsiden

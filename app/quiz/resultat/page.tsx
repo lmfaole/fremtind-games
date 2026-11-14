@@ -9,9 +9,7 @@ import { fetchStats, track, type Stats } from "@/analytics";
 import { QuestionStats } from "@/analytics/QuestionStats";
 import { isCorrect, questions, sections } from "@/quiz/questions";
 import styles from "./page.module.scss";
-import { clearAnswers, readAnswers, readMembers, readTeamName } from "@/quiz/storage";
-
-const SMS_NUMBER = "+4790713472";
+import { readAnswers, readCompleted, saveCompleted } from "@/quiz/storage";
 
 const formatAnswer = (answer: string | number | string[]) =>
     Array.isArray(answer) ? answer.join(", ") : String(answer);
@@ -20,20 +18,23 @@ const ResultPage = () => {
     const router = useRouter();
     const [score, setScore] = useState<number>();
     const [answers, setAnswers] = useState<Record<string, string[]>>({});
-    const [team, setTeam] = useState("");
-    const [members, setMembers] = useState<string[]>([]);
     const [stats, setStats] = useState<Stats | null>(null);
 
     useEffect(() => {
-        const answers = readAnswers();
+        // Et fullført resultat ligger varig i localStorage. Ellers leses svarene fra økten, og
+        // låses først når alle spørsmålene har et svar (også tomt, fra «Hopp over»).
+        const completed = readCompleted();
+        const answers = completed ?? readAnswers();
         setAnswers(answers);
-        setTeam(readTeamName());
-        setMembers(readMembers());
         const correct = questions.filter((question) =>
             isCorrect(question, answers[question.id] ?? []),
         ).length;
         setScore(correct);
-        track("quiz_finished", { score: correct, total: questions.length });
+
+        if (!completed && questions.every((question) => question.id in answers)) {
+            saveCompleted(answers);
+            track("quiz_finished", { score: correct, total: questions.length });
+        }
 
         // Statistikk er kosmetikk: feil gir null og ingenting vises.
         let cancelled = false;
@@ -44,23 +45,6 @@ const ResultPage = () => {
             cancelled = true;
         };
     }, []);
-
-    const restart = () => {
-        clearAnswers();
-        router.push("/quiz/lag/");
-    };
-
-    const smsBody = [
-        `Lag: ${team || "Uten navn"}`,
-        ...(members.length > 0 ? [`Medlemmer: ${members.join(", ")}`] : []),
-        `Svar på quizen: ${score ?? 0} av ${questions.length} riktige`,
-        ...questions.map(
-            (question, index) =>
-                `${index + 1}. ${formatAnswer(answers[question.id] ?? []) || "Ikke besvart"}`,
-        ),
-    ].join("\n");
-    // Mottakeren er fylt inn på forhånd.
-    const smsHref = `sms:${SMS_NUMBER}?&body=${encodeURIComponent(smsBody)}`;
 
     return (
         <Flex direction="column" gap="m" alignItems="center" className={styles.page}>
@@ -111,12 +95,9 @@ const ResultPage = () => {
                 className={styles.actions}
                 mainAction={{
                     type: "button",
-                    children: "Send svar på SMS",
-                    onClick: () => {
-                        window.location.href = smsHref;
-                    },
+                    children: "Til forsiden",
+                    onClick: () => router.push("/"),
                 }}
-                secondaryAction={{ type: "button", children: "Prøv igjen", onClick: restart }}
             />
         </Flex>
     );

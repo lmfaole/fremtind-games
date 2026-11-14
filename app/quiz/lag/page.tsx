@@ -8,11 +8,13 @@ import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import styles from "@/quiz/QuestionPage.module.scss";
 import { readTeamName, saveTeamName } from "@/quiz/storage";
+import { useCompletedRedirect } from "@/quiz/useCompletedRedirect";
 
 // Lagnavnet er ikke et spørsmål i quizen, og teller ikke med i poengene eller
-// i `/quiz/N`. Det vises først og sendes med i SMS-en.
+// i `/quiz/N`. Det vises først.
 const TeamPage = () => {
     const router = useRouter();
+    useCompletedRedirect();
     const [name, setName] = useState("");
     const [error, setError] = useState<string>();
 

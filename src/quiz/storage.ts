@@ -32,14 +32,6 @@ export const saveAnswer = (id: string, value: string[]) => {
     }
 };
 
-export const clearAnswers = () => {
-    try {
-        window.sessionStorage.removeItem(KEY);
-    } catch {
-        // Ignorer – neste svar overskriver uansett.
-    }
-};
-
 const TEAM_KEY = "fremtind-games:lag";
 
 export const readTeamName = (): string => {
@@ -74,5 +66,34 @@ export const saveMembers = (members: string[]) => {
         window.sessionStorage.setItem(MEMBERS_KEY, JSON.stringify(members));
     } catch {
         // Medlemmene går tapt ved refresh, men quizen fungerer videre.
+    }
+};
+
+const COMPLETED_KEY = "fremtind-games:fullfort";
+
+// Quizen kan bare besvares én gang per nettleser. Markeringen ligger i localStorage, ikke
+// sessionStorage, så den overlever at fanen lukkes. Den kan omgås (annen nettleser, privat
+// modus, tømt lagring); det finnes ingen innlogging å håndheve det mot.
+export const readCompleted = (): Record<string, string[]> | null => {
+    try {
+        const parsed: unknown = JSON.parse(window.localStorage.getItem(COMPLETED_KEY) ?? "null");
+        if (!parsed || typeof parsed !== "object") {
+            return null;
+        }
+        return Object.fromEntries(
+            Object.entries(parsed).filter((entry): entry is [string, string[]] =>
+                isStringList(entry[1]),
+            ),
+        );
+    } catch {
+        return null;
+    }
+};
+
+export const saveCompleted = (answers: Record<string, string[]>) => {
+    try {
+        window.localStorage.setItem(COMPLETED_KEY, JSON.stringify(answers));
+    } catch {
+        // Uten lagring kan quizen tas på nytt, men resultatet vises fortsatt nå.
     }
 };

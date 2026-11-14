@@ -21,6 +21,7 @@ import {
     questions,
     sectionOf,
 } from "./questions";
+import { useCompletedRedirect } from "./useCompletedRedirect";
 import { readAnswers, saveAnswer } from "./storage";
 
 const emptyMessage = (question: Question) => {
@@ -38,6 +39,7 @@ const emptyMessage = (question: Question) => {
 
 export const QuestionPage = ({ index }: { index: number }) => {
     const router = useRouter();
+    useCompletedRedirect();
     const [value, setValue] = useState<string[]>([]);
     const [error, setError] = useState<string>();
 

@@ -8,13 +8,14 @@ import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import styles from "@/quiz/QuestionPage.module.scss";
 import { readMembers, saveMembers } from "@/quiz/storage";
+import { useCompletedRedirect } from "@/quiz/useCompletedRedirect";
 
 const MAX_MEMBERS = 4;
 
-// Medlemmene er ikke et spørsmål i quizen. Tomme felt ignoreres, og navnene
-// sendes med i SMS-en.
+// Medlemmene er ikke et spørsmål i quizen. Tomme felt ignoreres.
 const MembersPage = () => {
     const router = useRouter();
+    useCompletedRedirect();
     const [members, setMembers] = useState<string[]>([""]);
 
     useEffect(() => {
