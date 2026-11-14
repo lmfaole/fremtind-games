@@ -44,7 +44,7 @@ Tester og typesjekk (kjøres også av `pnpm verify` i roten): `pnpm --filter fre
 2. Lim `database_id` fra utdataen inn i `wrangler.jsonc` (erstatter placeholderen).
 3. `pnpm migrate:remote`
 4. `pnpm deploy`
-5. Domene: forutsetter at `fremtind.games` ligger som sone i Cloudflare. Fjern kommentaren på `routes` i `wrangler.jsonc` (custom domain `api.fremtind.games`) og deploy på nytt, eller legg til domenet under Workers & Pages, Settings, Domains & Routes. DNS-posten opprettes da automatisk.
+5. Domene: `routes` i `wrangler.jsonc` kobler Workeren til `api.fremtind.games` (custom domain). Sonen `fremtind.games` må ligge i samme Cloudflare-konto; DNS-posten opprettes av deploy.
 
 ## Eksempel-SQL
 

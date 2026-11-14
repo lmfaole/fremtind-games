@@ -32,3 +32,7 @@ DNS hos domeneleverandøren:
 Merkevarefontene arver verdien. Sass leser ikke miljøvariabler, så prefikset må hardkodes begge steder.
 
 Se også [jokul.md](jokul.md) om fonter, som `prebuild` kopierer inn før bygget.
+
+## Statistikk-API
+
+`deploy.yml` bygger med `NEXT_PUBLIC_API_URL=https://api.fremtind.games`, som er Cloudflare Workeren i `worker/` (se [worker/README.md](../worker/README.md)). Fjernes variabelen, skjules statistikken og klienten sender ingenting. Workeren deployes manuelt med `pnpm deploy` i `worker/`, ikke av GitHub Actions.

@@ -11,6 +11,6 @@
             "migrations_dir": "migrations",
         },
     ],
-    // Eget domene (krever at fremtind.games ligger i Cloudflare):
-    // "routes": [{ "pattern": "api.fremtind.games", "custom_domain": true }]
+    // Eget domene. Krever at fremtind.games ligger som sone i Cloudflare; DNS-posten opprettes automatisk.
+    "routes": [{ "pattern": "api.fremtind.games", "custom_domain": true }],
 }

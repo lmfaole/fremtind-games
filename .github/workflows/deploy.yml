@@ -27,6 +27,8 @@ jobs:
             - run: pnpm install --frozen-lockfile
             - run: pnpm verify
             - run: pnpm build
+              env:
+                  NEXT_PUBLIC_API_URL: https://api.fremtind.games
             - uses: actions/configure-pages@v5
             - uses: actions/upload-pages-artifact@v3
               with:
