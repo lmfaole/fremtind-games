@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { readCompleted } from "./storage";
 
 /** Sender den som allerede har fullført quizen til resultatsiden, så den ikke kan tas på nytt. */
-export const useCompletedRedirect = () => {
+export const useCompletedRedirect = (slug: string) => {
     const router = useRouter();
 
     useEffect(() => {
-        if (readCompleted()) {
-            router.replace("/quiz/resultat/");
+        if (readCompleted(slug)) {
+            router.replace(`/quizer/${slug}/resultat/`);
         }
-    }, [router]);
+    }, [router, slug]);
 };

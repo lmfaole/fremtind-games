@@ -13,14 +13,9 @@ import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import { sendAnswer, track } from "@/analytics";
 import styles from "./QuestionPage.module.scss";
-import {
-    answerKeys,
-    isAnswered,
-    isCorrect,
-    type Question,
-    questions,
-    sectionOf,
-} from "./questions";
+import { answerKeys, isAnswered, isCorrect, sectionOf } from "./answers";
+import type { Question } from "./types";
+import { getQuiz } from "@/quizzes";
 import { useCompletedRedirect } from "./useCompletedRedirect";
 import { readAnswers, saveAnswer } from "./storage";
 
@@ -37,9 +32,14 @@ const emptyMessage = (question: Question) => {
     }
 };
 
-export const QuestionPage = ({ index }: { index: number }) => {
+export const QuestionPage = ({ slug, index }: { slug: string; index: number }) => {
     const router = useRouter();
-    useCompletedRedirect();
+    const quiz = getQuiz(slug);
+    if (!quiz) {
+        throw new Error(`Ukjent quiz: ${slug}`);
+    }
+    const { questions } = quiz;
+    useCompletedRedirect(slug);
     const [value, setValue] = useState<string[]>([]);
     const [error, setError] = useState<string>();
 
@@ -49,9 +49,9 @@ export const QuestionPage = ({ index }: { index: number }) => {
 
     // Lagrede svar finnes bare i nettleseren, så feltet fylles etter hydrering.
     useEffect(() => {
-        setValue(readAnswers()[question.id] ?? []);
+        setValue(readAnswers(slug)[question.id] ?? []);
         setError(undefined);
-    }, [question.id]);
+    }, [slug, question.id]);
 
     const selectSingle = (next: string) => {
         setValue(next.trim() === "" ? [] : [next]);
@@ -67,7 +67,8 @@ export const QuestionPage = ({ index }: { index: number }) => {
         setError(undefined);
     };
 
-    const next = () => router.push(isLast ? "/quiz/resultat/" : `/quiz/${index + 2}/`);
+    const next = () =>
+        router.push(isLast ? `/quizer/${slug}/resultat/` : `/quizer/${slug}/${index + 2}/`);
 
     const submit: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
@@ -78,26 +79,27 @@ export const QuestionPage = ({ index }: { index: number }) => {
         }
 
         // Bare nye eller endrede svar sendes, så tilbake/frem ikke gir dobbeltsending.
-        const previous = answerKeys(question, readAnswers()[question.id] ?? []);
+        const previous = answerKeys(question, readAnswers(slug)[question.id] ?? []);
         const current = answerKeys(question, value);
         if (previous.join("\n") !== current.join("\n")) {
             sendAnswer(question, value);
         }
         track("question_answered", {
+            quiz: slug,
             question_id: question.id,
             section: question.section,
             step: index + 1,
             correct: isCorrect(question, value),
         });
 
-        saveAnswer(question.id, value);
+        saveAnswer(slug, question.id, value);
         next();
     };
 
     // Et tidligere svar fjernes, slik at resultatet viser «Ikke besvart».
     const skip = () => {
-        track("question_skipped", { question_id: question.id, step: index + 1 });
-        saveAnswer(question.id, []);
+        track("question_skipped", { quiz: slug, question_id: question.id, step: index + 1 });
+        saveAnswer(slug, question.id, []);
         next();
     };
 
@@ -110,11 +112,14 @@ export const QuestionPage = ({ index }: { index: number }) => {
                     aria-valuetext={`Spørsmål ${index + 1} av ${questions.length}`}
                 />
                 <Text size="s" subdued>
-                    {sectionOf(question).title} · Spørsmål {index + 1} av {questions.length}
+                    {sectionOf(quiz, question).title} · Spørsmål {index + 1} av {questions.length}
                 </Text>
             </Flex>
             <Flex className={styles.header}>
-                <NavLink back href={index === 0 ? "/quiz/medlemmer/" : `/quiz/${index}/`}>
+                <NavLink
+                    back
+                    href={index === 0 ? `/quizer/${slug}/medlemmer/` : `/quizer/${slug}/${index}/`}
+                >
                     {index === 0 ? "Lagmedlemmer" : "Forrige spørsmål"}
                 </NavLink>
             </Flex>

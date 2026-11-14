@@ -1,6 +1,7 @@
 "use client";
 import { Text } from "@fremtind/jokul/typography";
-import { answerKeys, correctValue, type Question } from "@/quiz/questions";
+import { answerKeys, correctValue } from "@/quiz/answers";
+import type { Question } from "@/quiz/types";
 import styles from "./QuestionStats.module.scss";
 import { MIN_SVAR_FOR_STATISTIKK, type QuestionStats as Stats } from "./index";
 

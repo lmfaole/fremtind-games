@@ -7,7 +7,8 @@ import { Select } from "@fremtind/jokul/select";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
-import { quizzes, readScore } from "@/quizzes";
+import { readScore } from "@/quiz/score";
+import { quizzes } from "@/quizzes";
 import styles from "./page.module.scss";
 
 const Home = () => {
@@ -17,7 +18,7 @@ const Home = () => {
 
     useEffect(() => {
         setBrandState(readBrand());
-        setScores(Object.fromEntries(quizzes.map((quiz) => [quiz.id, readScore(quiz)])));
+        setScores(Object.fromEntries(quizzes.map((quiz) => [quiz.slug, readScore(quiz)])));
     }, []);
 
     return (
@@ -28,11 +29,11 @@ const Home = () => {
                 </Title>
                 <ul className={styles.list}>
                     {quizzes.map((quiz) => {
-                        const score = scores[quiz.id] ?? null;
-                        const href = score === null ? quiz.startHref : quiz.resultHref;
+                        const score = scores[quiz.slug] ?? null;
+                        const href = `/quizer/${quiz.slug}/${score === null ? "lag" : "resultat"}/`;
 
                         return (
-                            <li key={quiz.id}>
+                            <li key={quiz.slug}>
                                 <Card as="a" href={href} padding="m" className={styles.card}>
                                     <CardImage
                                         src={quiz.image}
@@ -44,12 +45,12 @@ const Home = () => {
                                             {quiz.title}
                                         </Title>
                                         <Text size="s" subdued>
-                                            {quiz.questionCount} spørsmål
+                                            {quiz.questions.length} spørsmål
                                         </Text>
                                         {score !== null && (
                                             <Text>
                                                 <strong>
-                                                    {score} av {quiz.questionCount} riktige
+                                                    {score} av {quiz.questions.length} riktige
                                                 </strong>
                                             </Text>
                                         )}
