@@ -36,6 +36,16 @@ const Personvern = () => (
                 aldri enheten din.
             </Text>
             <Title as="h2" size="m">
+                Bruk uten nett og installasjon
+            </Title>
+            <Text>
+                Quizen kan installeres som app og brukes uten nett. For å få det til lagrer
+                nettleseren en kopi av nettstedet (sider, skrifter og bilder) i en lokal cache. Den
+                inneholder ingenting om deg. Hvis du installerer appen eller åpner den fra
+                hjemskjermen, sender vi hendelsene «installert», «åpnet som app» og «oppdatert»,
+                uten noe som kan knyttes til deg. Svar gitt uten nett blir ikke med i statistikken.
+            </Text>
+            <Title as="h2" size="m">
                 Verktøy
             </Title>
             <Text>

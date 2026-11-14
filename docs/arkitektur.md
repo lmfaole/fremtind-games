@@ -71,6 +71,21 @@ Forsiden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller banner
 
 Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden, så `app/globals.scss` setter `width: 100%` på `.jkl-text-input-wrapper`, `.jkl-text-area-wrapper` og `.jkl-number-input__wrapper`. Regelen ligger utenfor Jøkuls cascade layers og vinner derfor uavhengig av spesifisitet. `NumberInput` trenger en egen selektor fordi `.jkl-number-input` setter `align-items: flex-start`, som ellers krymper feltet uansett bredde. Selve bredden styres av `.form` i `src/quiz/QuestionPage.module.scss`.
 
+## PWA og offline
+
+Nettstedet er en installerbar PWA som fungerer uten nett. Alt er håndskrevet, uten ekstra avhengigheter.
+
+- **Manifest:** `app/manifest.ts` (`force-static`, blir `/manifest.webmanifest`). Standalone, norsk, `theme_color`/`background_color` = Jøkuls mørke sidefarge `#0E0D0C`. Ikoner (192, 512, maskable, apple-touch) ligger i `public/icons` og lages med `python3 scripts/generate-icons.py` (Pillow, kjøres manuelt, PNG-ene er sjekket inn).
+- **Service worker:** `scripts/sw.template.js` er malen. `postbuild` (`scripts/build-sw.mjs`) skriver `out/sw.js` med liste over alt i `out/` (sider som `/quiz/1/`, `index.txt` med RSC-data, `_next/static`, bilder, ikoner og de fontene stilarkene bruker) og en versjon som er en hash av innholdet. Den ligger på rota, scope `/`. Andre merkevarers fonter caches første gang de brukes (`fg-runtime`).
+- **Strategi:** forhåndslastet cache `fg-precache-<versjon>` (gamle slettes ved aktivering). Hasha filer og ikoner: cache først. Sider og `.txt`: nettverk først (3 s timeout) med cache som reserve, slik at nye spørsmål ikke blir stale, og responsen lagres bevisst ikke (ny HTML peker på nye JS-filer). Andre opphav enn nettstedet selv (statistikk-API, PostHog) rører service workeren aldri: ingen `respondWith`, ingen cache.
+- **Oppdatering:** ny worker venter (ingen `skipWaiting` ved install). `src/pwa/PwaInit.tsx` viser «Ny versjon tilgjengelig» med «Last på nytt», som sender `SKIP_WAITING`; ved `controllerchange` lastes siden på nytt. Oppdateringssjekk ved lasting og hver time.
+- **Registrering:** bare når `NODE_ENV === "production"`. `pnpm dev` har ingen service worker.
+- **Push-handlere:** `push` viser et varsel fra JSON `{title, body, url}`, og `notificationclick` fokuserer eller åpner `url` (bare samme opphav). Det finnes ingen abonnementskode i klienten ennå.
+- **Installasjon:** `src/pwa/InstallPrompt.tsx` på forsiden bruker `beforeinstallprompt`, og viser en iOS-instruks («Legg til på Hjem-skjerm») i Safari.
+- **Hendelser** (via `track()`, ingenting lagres på enheten): `pwa_installed` (`appinstalled`), `pwa_launched` (én gang per sidelasting når `display-mode: standalone`), `sw_update_applied`.
+- **Offline-oppførsel:** quiz, resultat og svar (`sessionStorage`/`localStorage`) virker uten nett. `sendAnswer` og `fetchStats` gjør ingenting når `navigator.onLine` er false og svelger feil ellers. Svar gitt offline sendes ikke senere (køing ville krevd lagring til analyse), og statistikk vises ikke på resultatsiden uten nett.
+- **Fallgruve:** nettleseren ber om `%5Bstep%5D`, ikke `[step]`, så `build-sw.mjs` URL-koder stiene. Cachen matcher på eksakt URL.
+
 ## PostHog (atferdsanalyse og A/B-testing)
 
 `src/analytics/posthog.ts` laster `posthog-js` dynamisk, og bare når `NEXT_PUBLIC_POSTHOG_TOKEN` er satt (tokenet er offentlig og skrivebeskyttet, og ligger i `deploy.yml`). Prosjektet ligger i EU-regionen (`https://eu.i.posthog.com`). Oppsettet er bevisst personvernvennlig:

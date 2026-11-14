@@ -25,6 +25,8 @@ fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøku
 | `src/quiz/QuestionPage.tsx`  | UI for ett spørsmål (klientkomponent)                                     |
 | `src/quiz/storage.ts`        | Lesing/skriving av `sessionStorage` (svar, lagnavn, medlemmer)            |
 | `src/analytics/`             | Valgfri statistikk: `sendAnswer`, `fetchStats`, `QuestionStats`           |
+| `src/pwa/`                   | Service worker-registrering, oppdateringsmelding, installasjonsknapp      |
+| `scripts/build-sw.mjs`       | Genererer `out/sw.js` fra `sw.template.js` etter bygg (`postbuild`)       |
 | `src/brand.ts`               | Temavalg i `localStorage`                                                 |
 | `app/page.tsx`               | Forside                                                                   |
 | `app/quiz/lag`, `medlemmer`  | Lagnavn og medlemmer                                                      |
@@ -64,6 +66,7 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 
 ## Regler
 
+- Jobb mot `dev`, ikke `main`. `main` er produksjon (deployes til GitHub Pages) og oppdateres bare ved at `dev` slås sammen i den. Push til `dev` gir forhåndsvisning på Cloudflare Pages, se [docs/deploy.md](docs/deploy.md#forhåndsvisning-dev).
 - Ikke lag pull request uten at brukeren ber om det.
 - Små, logiske commits, én endring per commit.
 - Endres oppførsel, ruter eller kommandoer: oppdater [README.md](README.md) (og relevant fil i `docs/`) i samme commit.

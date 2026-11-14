@@ -9,6 +9,7 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
+import { InstallPrompt } from "@/pwa/InstallPrompt";
 import { readCompleted } from "@/quiz/storage";
 import styles from "./page.module.scss";
 
@@ -51,6 +52,7 @@ const Home = () => {
                                 router.push(completed ? "/quiz/resultat/" : "/quiz/lag/"),
                         }}
                     />
+                    <InstallPrompt />
                     <Text size="s" subdued>
                         <a href="/personvern/" className={styles.link}>
                             Personvern

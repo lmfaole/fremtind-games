@@ -21,6 +21,10 @@ pnpm install
 pnpm dev
 ```
 
+## PWA og offline
+
+Nettstedet kan installeres som app og fungerer uten nett (alle sider forhåndslastes). Service workeren `sw.js` genereres av `postbuild` (`scripts/build-sw.mjs`, fra `scripts/sw.template.js`) og registreres bare i produksjonsbygg. `pnpm dev` har ingen service worker. For å teste offline: `pnpm build`, server `out/` (f.eks. `npx serve out`) og slå av nettet i DevTools. Manifest: `app/manifest.ts`, ikoner: `public/icons` (generert med `scripts/generate-icons.py`). Se [docs/arkitektur.md](docs/arkitektur.md#pwa-og-offline).
+
 ## Statistikk (valgfritt)
 
 Settes `NEXT_PUBLIC_API_URL` ved bygg (se `.env.example`), sendes anonyme svar til den adressen og resultatsiden viser hvor mange andre som svarte hva. Uten variabelen skjer ingen nettverkskall og ingenting vises. Se [docs/arkitektur.md](docs/arkitektur.md#statistikk).

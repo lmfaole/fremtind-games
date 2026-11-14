@@ -15,12 +15,16 @@ export type Stats = Record<string, QuestionStats>;
 
 const TIMEOUT_MS = 4000;
 
+// Frakoblet (f.eks. som installert app): ikke prøv, så ingenting feiler eller støyer i konsollen.
+// Svar sendt uten nett går tapt. Det er bevisst, siden køing ville krevd lagring til analyse.
+const offline = () => typeof navigator !== "undefined" && navigator.onLine === false;
+
 /**
  * Sender ett anonymt svar: bare økt-id, spørsmåls-id og normaliserte nøkler.
  * Aldri lagnavn, medlemmer eller fritekst-label. Blokkerer aldri og svelger feil.
  */
 export const sendAnswer = (question: Question, value: string[]): void => {
-    if (!analyticsEnabled) {
+    if (!analyticsEnabled || offline()) {
         return;
     }
 
@@ -52,7 +56,7 @@ const isRecord = (value: unknown): value is Stats =>
 
 /** Henter aggregert statistikk. Gir null ved feil, timeout eller manglende backend. */
 export const fetchStats = async (): Promise<Stats | null> => {
-    if (!analyticsEnabled) {
+    if (!analyticsEnabled || offline()) {
         return null;
     }
 

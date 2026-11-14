@@ -1,0 +1,17 @@
+.banner {
+    position: fixed;
+    inset-inline: var(--jkl-spacing-m);
+    inset-block-end: var(--jkl-spacing-m);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--jkl-spacing-m);
+    max-width: 28rem;
+    margin-inline: auto;
+    padding: var(--jkl-spacing-s) var(--jkl-spacing-m);
+    border-radius: var(--jkl-spacing-xs);
+    background-color: var(--jkl-color-background-container-high, #fff);
+    color: var(--jkl-color-text-default, #000);
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.3);
+}
