@@ -1,4 +1,7 @@
-export interface Env {
+import { corsHeaders, json } from "./http.ts";
+import { handlePush, type PushEnv } from "./push.ts";
+
+export interface Env extends PushEnv {
     DB: D1Database;
 }
 
@@ -8,33 +11,12 @@ export interface CacheLike {
     put(request: Request, response: Response): Promise<void>;
 }
 
-const ALLOWED_ORIGINS = [
-    "https://fremtind.games",
-    "https://www.fremtind.games",
-    "http://localhost:3000",
-];
 const MAX_BODY_BYTES = 2048;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ID = /^[a-z0-9_-]{1,64}$/;
 const CACHE_CONTROL = "public, max-age=60";
 
 type Stats = { total: number; counts: Record<string, number> };
-
-function corsHeaders(request: Request): Record<string, string> {
-    const origin = request.headers.get("Origin");
-    const headers: Record<string, string> = { Vary: "Origin" };
-    if (origin && ALLOWED_ORIGINS.includes(origin)) {
-        headers["Access-Control-Allow-Origin"] = origin;
-    }
-    return headers;
-}
-
-function json(request: Request, body: unknown, status = 200, extra: Record<string, string> = {}) {
-    return new Response(JSON.stringify(body), {
-        status,
-        headers: { "Content-Type": "application/json", ...corsHeaders(request), ...extra },
-    });
-}
 
 type Parsed =
     | { ok: true; sessionId: string; questionId: string; keys: string[]; variant: string | null }
@@ -172,8 +154,14 @@ async function getStats(request: Request, env: Env, cache: CacheLike | undefined
     });
 }
 
-export async function handle(request: Request, env: Env, cache?: CacheLike): Promise<Response> {
+export async function handle(
+    request: Request,
+    env: Env,
+    cache?: CacheLike,
+    fetchFn: typeof fetch = fetch,
+): Promise<Response> {
     const path = new URL(request.url).pathname.replace(/\/+$/, "") || "/";
+    if (path.startsWith("/push/")) return handlePush(request, env, path, fetchFn);
     const isStats = path === "/statistikk" || path.startsWith("/statistikk/");
     if (path !== "/svar" && !isStats) {
         return json(request, { error: "Ikke funnet" }, 404);

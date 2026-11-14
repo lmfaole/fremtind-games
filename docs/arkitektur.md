@@ -99,3 +99,9 @@ Følger for utviklere:
 Når resultatsiden åpnes med et svar (også tomt, fra «Hopp over») på alle spørsmål, lagres svarene i `localStorage` (`fremtind-games:fullfort`) og `quiz_finished` sendes. Deretter sender `useCompletedRedirect` (`src/quiz/useCompletedRedirect.ts`) alle quizsider (`/quiz/lag`, `/quiz/medlemmer`, `/quiz/N`) til `/quiz/resultat/`, resultatsiden leser det lagrede resultatet, og forsiden viser «Se resultatet ditt» i stedet for «Start quizen». Det finnes ingen «Prøv igjen».
 
 Begrensninger: dette er ren klientside-håndheving uten innlogging, så det kan omgås med en annen nettleser, privat modus eller tømt lagring. Det er heller ikke nødvendig funksjonalitet i samtykke-forstand (§ 3-15), selv om det ikke brukes til analyse; få dette vurdert hvis dere er usikre.
+
+## Push-backend (Web Push)
+
+Workeren (`worker/src/push.ts`, `webpush.ts`) har et lite Web Push-API: `POST /push/subscribe`, `/push/unsubscribe` og `/push/send`. VAPID (RFC 8292) og aes128gcm-kryptering (RFC 8291) er gjort med WebCrypto, uten avhengigheter. `/push/send` krever `Authorization: Bearer <PUSH_ADMIN_TOKEN>` og sender i bolker (standard 40 per kall) for å holde seg under grensen for subrequests. Abonnement som svarer 404/410 slettes. Uten `VAPID_*`-secrets og `PUSH_ADMIN_TOKEN` svarer `/push/*` med 503, og resten av Workeren virker som før. Detaljer: [worker/README.md](../worker/README.md).
+
+Personvern: tabellen `push_subscriptions` har bare `endpoint`, nøklene og opprettet-tidspunkt. Abonnementet er en enhets-id hos push-tjenesten (nettleserleverandøren), ikke koblet til lagnavn, medlemmer, svar, `sessionId` eller IP, og Workeren logger ingen av dem. Brukeren kan melde seg av når som helst (`/push/unsubscribe`).
