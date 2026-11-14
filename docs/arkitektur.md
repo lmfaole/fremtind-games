@@ -96,6 +96,8 @@ Jøkul lar inputfelt krympe til innholdet sitt. Her skal de alltid fylle bredden
 - `autocapture: false`: bare eksplisitte hendelser, så tekst fra lagnavn- og medlemsfeltene aldri fanges.
 - Ingen session recording, ingenting i nettleserens lagring (`persistence: "memory"`), ingen personprofiler (`person_profiles: "identified_only"`) og `ip: false`.
 - Hendelsene er `$pageview` (automatisk ved sidebytte), `question_answered` (`quiz`, `question_id`, `section`, `step`, `correct`), `question_skipped` (`quiz`, `question_id`, `step`) og `quiz_finished` (`quiz`, `score`, `total`). `quiz` er quizens slug. `POST /svar` til statistikk-backenden er uendret. Aldri navn eller fritekst.
+- Feilsporing: `capture_exceptions: true` sender uhåndterte feil og avviste promises som `$exception`. Det krever også at `autocapture_exceptions_opt_in` er slått på i PostHog-prosjektet (er gjort), ellers ignorerer klienten det. Se feilene under Error tracking i PostHog.
+- Bevisst av: `capture_heatmaps: false` og `disable_surveys: true`, siden prosjektet har dem på som standard og klienten ellers følger det. Surveys husker i nettleseren hva som er vist, og det utløser samtykkekravet.
 - Headless-nettlesere filtreres bort av PostHog som boter. I e2e-tester må `navigator.webdriver` og `navigator.userAgentData` overstyres for at hendelser skal sendes.
 
 ### A/B-testing

@@ -21,6 +21,14 @@ export const initPostHog = (): Promise<PostHog | null> => {
                 autocapture: false,
                 capture_pageview: "history_change",
                 disable_session_recording: true,
+                // Uhåndterte feil og avviste promises, så krasj hos brukerne blir synlige. Lagrer ingenting
+                // i nettleseren og sender ingen skjemaverdier.
+                capture_exceptions: true,
+                // PostHog-prosjektet har heatmaps og surveys slått på, og klienten følger den
+                // innstillingen. Vi bruker ingen av dem (surveys husker i nettleseren hva som er
+                // vist, og heatmaps trenger mer enn vi vil samle), så de er av her.
+                capture_heatmaps: false,
+                disable_surveys: true,
                 // Ingenting lagres i nettleseren (verken cookie eller storage): da trengs ikke
                 // samtykke etter ekomloven § 3-15. Anonym id lever bare til siden lastes på nytt.
                 persistence: "memory",
