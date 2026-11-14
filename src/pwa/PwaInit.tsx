@@ -1,10 +1,8 @@
 // Jøkul 6.1.0-next.7 har ingen "use client"-direktiver (se docs/jokul.md).
 "use client";
-import { Button } from "@fremtind/jokul/button";
-import { Text } from "@fremtind/jokul/typography";
+import { ToastProvider, useToast } from "@fremtind/jokul/toast";
 import { useEffect, useRef, useState } from "react";
 import { track } from "@/analytics";
-import styles from "./PwaInit.module.scss";
 import { trackLaunchOnce } from "./index";
 
 const UPDATE_CHECK_MS = 60 * 60 * 1000;
@@ -76,28 +74,48 @@ export const PwaInit = () => {
         };
     }, []);
 
-    if (!waiting) {
-        return null;
-    }
-
     return (
-        <div className={styles.banner} role="status" data-theme="dark">
-            <Text size="s">Ny versjon tilgjengelig</Text>
-            <Button
-                variant="secondary"
-                onClick={() => {
+        <ToastProvider>
+            <UpdateToast
+                waiting={waiting}
+                onApply={() => {
                     applying.current = true;
                     // Send hvis workeren er borte (allerede aktivert i en annen fane): last på nytt.
-                    waiting.postMessage({ type: "SKIP_WAITING" });
+                    waiting?.postMessage({ type: "SKIP_WAITING" });
                     window.setTimeout(() => {
                         if (applying.current) {
                             window.location.reload();
                         }
                     }, 3000);
                 }}
-            >
-                Last på nytt
-            </Button>
-        </div>
+            />
+        </ToastProvider>
     );
+};
+
+/** Viser Jøkuls toast så lenge en ny versjon venter. Ingen timeout: valget skal ikke forsvinne. */
+const UpdateToast = ({
+    waiting,
+    onApply,
+}: {
+    waiting: ServiceWorker | null;
+    onApply: () => void;
+}) => {
+    const toast = useToast();
+    const apply = useRef(onApply);
+    apply.current = onApply;
+
+    useEffect(() => {
+        if (!waiting) {
+            return;
+        }
+        const key = toast.add("Ny versjon tilgjengelig", {
+            variant: "info",
+            timeout: "off",
+            action: { label: "Last på nytt", onClick: () => apply.current() },
+        });
+        return () => toast.close(key);
+    }, [waiting, toast]);
+
+    return null;
 };
