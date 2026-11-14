@@ -1,13 +1,12 @@
 "use client";
-import { ButtonGroup } from "@fremtind/jokul/button-group";
 import { Accordion, ExpandablePanel } from "@fremtind/jokul/expander";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchStats, track, type Stats } from "@/analytics";
 import { QuestionStats } from "@/analytics/QuestionStats";
 import { isCorrect } from "@/quiz/answers";
+import { LinkButtonGroup } from "@/quiz/LinkButtonGroup";
 import styles from "./page.module.scss";
 import { readAnswers, readCompleted, saveCompleted } from "@/quiz/storage";
 import { useQuiz } from "@/quiz/useQuiz";
@@ -16,7 +15,6 @@ const formatAnswer = (answer: string | number | string[]) =>
     Array.isArray(answer) ? answer.join(", ") : String(answer);
 
 const ResultPage = () => {
-    const router = useRouter();
     const { slug, questions, sections } = useQuiz();
     const [score, setScore] = useState<number>();
     const [answers, setAnswers] = useState<Record<string, string[]>>({});
@@ -93,13 +91,9 @@ const ResultPage = () => {
                     );
                 })}
             </Accordion>
-            <ButtonGroup
+            <LinkButtonGroup
                 className={styles.actions}
-                mainAction={{
-                    type: "button",
-                    children: "Til forsiden",
-                    onClick: () => router.push("/"),
-                }}
+                main={{ href: "/", label: "Til forsiden" }}
             />
         </Flex>
     );

@@ -1,11 +1,11 @@
 // Jøkul 6.1.0-next.7 har ingen "use client"-direktiver, så komponentene kan ikke
 // rendres i en Server Component.
 "use client";
-import { Button } from "@fremtind/jokul/button";
 import { Card } from "@fremtind/jokul/card";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useEffect, useState } from "react";
+import { LinkButtonGroup } from "@/quiz/LinkButtonGroup";
 import { readScore } from "@/quiz/score";
 import { formatQuizTime, quizStatus, type QuizStatus } from "@/quiz/status";
 import { hasStarted } from "@/quiz/storage";
@@ -82,23 +82,10 @@ const QuizHome = () => {
                         !canStart &&
                         state.status === "closed" &&
                         quiz.closes && <Text>Stengte {formatQuizTime(quiz.closes)}.</Text>}
-                    {/* Vanlige lenker, ikke knapper med router.push: de virker uten JavaScript og
-                        gir riktig oppførsel for åpne-i-ny-fane. Samme layout som ButtonGroup. */}
-                    <Flex
-                        className="jkl-button-group"
-                        direction="column"
-                        alignItems="center"
-                        gap="8"
-                    >
-                        {primary && (
-                            <Button as="a" href={primary.href} variant="primary">
-                                {primary.label}
-                            </Button>
-                        )}
-                        <Button as="a" href="/" variant={primary ? "ghost" : "primary"}>
-                            Alle quizer
-                        </Button>
-                    </Flex>
+                    <LinkButtonGroup
+                        main={primary ?? { href: "/", label: "Alle quizer" }}
+                        secondary={primary ? { href: "/", label: "Alle quizer" } : undefined}
+                    />
                 </Flex>
             </Card>
         </main>

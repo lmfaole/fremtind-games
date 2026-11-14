@@ -1,9 +1,9 @@
 "use client";
-import { ButtonGroup } from "@fremtind/jokul/button-group";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
+import { LinkButtonGroup } from "./LinkButtonGroup";
 import styles from "./QuestionPage.module.scss";
 import { formatQuizTime, quizStatus } from "./status";
 import { hasStarted, readCompleted } from "./storage";
@@ -56,13 +56,9 @@ export const QuizGate = ({ children }: { children: ReactNode }) => {
             {quiz.closes && quizStatus(quiz) === "closed" && (
                 <Text>Stengte {formatQuizTime(quiz.closes)}.</Text>
             )}
-            <ButtonGroup
+            <LinkButtonGroup
                 className={styles.actions}
-                mainAction={{
-                    type: "button",
-                    children: "Til forsiden",
-                    onClick: () => router.push("/"),
-                }}
+                main={{ href: "/", label: "Til forsiden" }}
             />
         </Flex>
     );
