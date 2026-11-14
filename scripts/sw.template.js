@@ -38,38 +38,48 @@ self.addEventListener("message", (event) => {
 // ignoreSearch: Next henter RSC-data som /sti/index.txt?_rsc=… .
 const matchCached = (request) => caches.match(request, { ignoreSearch: true });
 
-const networkWithTimeout = (request) =>
-    new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error("timeout")), NETWORK_TIMEOUT_MS);
-        fetch(request).then(
-            (response) => {
-                clearTimeout(timer);
-                resolve(response);
-            },
-            (error) => {
-                clearTimeout(timer);
-                reject(error);
-            },
-        );
-    });
+const TIMEOUT = Symbol("timeout");
 
 // Nettverk først, så nye spørsmål ikke blir stale. Responsen lagres bevisst ikke: ny HTML
 // peker på nye JS-filer som ikke finnes i den forhåndslastede versjonen.
+//
+// Cachen er bare en reserve. En side som ikke ligger i cachen (f.eks. en ny quiz etter at
+// service workeren ble installert) skal aldri bli til en 404-side fordi nettet er tregt eller
+// svarer med en feil: da venter vi på nettverket, eller sender svaret videre som det er.
 const networkFirst = async (request) => {
+    const attempt = fetch(request);
+    let timer;
     try {
-        const response = await networkWithTimeout(request);
+        const response = await Promise.race([
+            attempt,
+            new Promise((_, reject) => {
+                timer = setTimeout(() => reject(TIMEOUT), NETWORK_TIMEOUT_MS);
+            }),
+        ]);
+        clearTimeout(timer);
         if (response.ok || response.status === 404) {
             return response;
         }
-        throw new Error(`status ${response.status}`);
-    } catch {
+        // Serverfeil (5xx o.l.): cache hvis vi har den, ellers selve svaret.
+        return (await matchCached(request)) ?? response;
+    } catch (error) {
+        clearTimeout(timer);
         const cached = await matchCached(request);
         if (cached) {
             return cached;
         }
+        if (error === TIMEOUT) {
+            // Tregt nett og ingenting i cachen: vent på den samme forespørselen.
+            try {
+                return await attempt;
+            } catch {
+                // Falt ut mens vi ventet: behandles som frakoblet under.
+            }
+        }
         if (request.mode === "navigate") {
+            // Frakoblet og siden finnes ikke i cachen. Forsiden er forhåndslastet og bedre enn
+            // en 404-side, som feilaktig sier at siden ikke finnes.
             return (
-                (await caches.match("/404.html")) ??
                 (await caches.match("/")) ??
                 new Response("Du er frakoblet.", {
                     status: 503,
