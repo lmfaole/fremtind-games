@@ -58,3 +58,10 @@
 .title {
     color: #fff;
 }
+
+// Quiz som ikke kan startes: dempet og uten lenke, så den ikke ser klikkbar ut.
+.disabled {
+    opacity: 0.55;
+    filter: grayscale(0.7);
+    cursor: not-allowed;
+}

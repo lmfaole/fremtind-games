@@ -7,6 +7,7 @@ import { Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import styles from "@/quiz/QuestionPage.module.scss";
+import { QuizGate } from "@/quiz/QuizGate";
 import { readMembers, saveMembers } from "@/quiz/storage";
 import { useCompletedRedirect } from "@/quiz/useCompletedRedirect";
 import { useQuiz } from "@/quiz/useQuiz";
@@ -14,7 +15,7 @@ import { useQuiz } from "@/quiz/useQuiz";
 const MAX_MEMBERS = 4;
 
 // Medlemmene er ikke et spørsmål i quizen. Tomme felt ignoreres.
-const MembersPage = () => {
+const MembersPageForm = () => {
     const router = useRouter();
     const { slug } = useQuiz();
     useCompletedRedirect(slug);
@@ -69,5 +70,11 @@ const MembersPage = () => {
         </>
     );
 };
+
+const MembersPage = () => (
+    <QuizGate>
+        <MembersPageForm />
+    </QuizGate>
+);
 
 export default MembersPage;

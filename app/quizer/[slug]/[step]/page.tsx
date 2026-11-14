@@ -1,4 +1,5 @@
 import { QuestionPage } from "@/quiz/QuestionPage";
+import { QuizGate } from "@/quiz/QuizGate";
 import { quizzes } from "@/quizzes";
 
 export const generateStaticParams = () =>
@@ -9,7 +10,11 @@ export const generateStaticParams = () =>
 const Step = async ({ params }: { params: Promise<{ slug: string; step: string }> }) => {
     const { slug, step } = await params;
 
-    return <QuestionPage slug={slug} index={Number(step) - 1} />;
+    return (
+        <QuizGate>
+            <QuestionPage slug={slug} index={Number(step) - 1} />
+        </QuizGate>
+    );
 };
 
 export default Step;

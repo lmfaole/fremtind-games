@@ -7,13 +7,14 @@ import { Title } from "@fremtind/jokul/typography";
 import { useRouter } from "next/navigation";
 import { type FormEventHandler, useEffect, useState } from "react";
 import styles from "@/quiz/QuestionPage.module.scss";
+import { QuizGate } from "@/quiz/QuizGate";
 import { readTeamName, saveTeamName } from "@/quiz/storage";
 import { useCompletedRedirect } from "@/quiz/useCompletedRedirect";
 import { useQuiz } from "@/quiz/useQuiz";
 
 // Lagnavnet er ikke et spørsmål i quizen, og teller ikke med i poengene eller
 // i `/quizer/<slug>/N`. Det vises først.
-const TeamPage = () => {
+const TeamPageForm = () => {
     const router = useRouter();
     const { slug } = useQuiz();
     useCompletedRedirect(slug);
@@ -64,5 +65,11 @@ const TeamPage = () => {
         </>
     );
 };
+
+const TeamPage = () => (
+    <QuizGate>
+        <TeamPageForm />
+    </QuizGate>
+);
 
 export default TeamPage;

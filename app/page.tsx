@@ -8,6 +8,7 @@ import { Text, Title } from "@fremtind/jokul/typography";
 import { useEffect, useState } from "react";
 import { brands, readBrand, setBrand } from "@/brand";
 import { readScore } from "@/quiz/score";
+import { formatQuizTime, type QuizStatus, quizStatus } from "@/quiz/status";
 import { quizzes } from "@/quizzes";
 import styles from "./page.module.scss";
 
@@ -16,7 +17,12 @@ const Home = () => {
     // Fullført resultat finnes bare i nettleseren, så det leses etter hydrering.
     const [scores, setScores] = useState<Record<string, number | null>>({});
 
+    // Klokka finnes bare i nettleseren, så åpningstider vurderes etter hydrering. Til da er kort
+    // for quizer med tidsrom nøytrale i stedet for å vise en tilstand som kan være feil.
+    const [statuses, setStatuses] = useState<Record<string, QuizStatus>>({});
+
     useEffect(() => {
+        setStatuses(Object.fromEntries(quizzes.map((quiz) => [quiz.slug, quizStatus(quiz)])));
         setBrandState(readBrand());
         setScores(Object.fromEntries(quizzes.map((quiz) => [quiz.slug, readScore(quiz)])));
     }, []);
@@ -30,32 +36,62 @@ const Home = () => {
                 <ul className={styles.list}>
                     {quizzes.map((quiz) => {
                         const score = scores[quiz.slug] ?? null;
+                        const status = statuses[quiz.slug];
+                        const hasWindow = quiz.opens !== undefined || quiz.closes !== undefined;
+                        // Fullført quiz viser alltid resultatet. Ellers kan bare en åpen quiz startes.
+                        const blocked = score === null && hasWindow && status !== "open";
                         const href = `/quizer/${quiz.slug}/${score === null ? "lag" : "resultat"}/`;
+
+                        const content = (
+                            <>
+                                <CardImage
+                                    src={quiz.image}
+                                    alt={quiz.imageAlt}
+                                    className={styles.image}
+                                />
+                                <Flex direction="column" gap="xs">
+                                    <Title as="h2" size="m">
+                                        {quiz.title}
+                                    </Title>
+                                    <Text size="s" subdued>
+                                        {quiz.questions.length} spørsmål
+                                    </Text>
+                                    {score !== null && (
+                                        <Text>
+                                            <strong>
+                                                {score} av {quiz.questions.length} riktige
+                                            </strong>
+                                        </Text>
+                                    )}
+                                    {blocked && status === "upcoming" && quiz.opens && (
+                                        <Text>
+                                            <strong>Åpner {formatQuizTime(quiz.opens)}</strong>
+                                        </Text>
+                                    )}
+                                    {blocked && status === "closed" && (
+                                        <Text>
+                                            <strong>Stengt</strong>
+                                        </Text>
+                                    )}
+                                </Flex>
+                            </>
+                        );
 
                         return (
                             <li key={quiz.slug}>
-                                <Card as="a" href={href} padding="m" className={styles.card}>
-                                    <CardImage
-                                        src={quiz.image}
-                                        alt={quiz.imageAlt}
-                                        className={styles.image}
-                                    />
-                                    <Flex direction="column" gap="xs">
-                                        <Title as="h2" size="m">
-                                            {quiz.title}
-                                        </Title>
-                                        <Text size="s" subdued>
-                                            {quiz.questions.length} spørsmål
-                                        </Text>
-                                        {score !== null && (
-                                            <Text>
-                                                <strong>
-                                                    {score} av {quiz.questions.length} riktige
-                                                </strong>
-                                            </Text>
-                                        )}
-                                    </Flex>
-                                </Card>
+                                {blocked ? (
+                                    <Card
+                                        padding="m"
+                                        className={`${styles.card} ${styles.disabled}`}
+                                        aria-disabled="true"
+                                    >
+                                        {content}
+                                    </Card>
+                                ) : (
+                                    <Card as="a" href={href} padding="m" className={styles.card}>
+                                        {content}
+                                    </Card>
+                                )}
                             </li>
                         );
                     })}
