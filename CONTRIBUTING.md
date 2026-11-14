@@ -16,11 +16,11 @@ pnpm dev
 
 ## Arbeidsflyt
 
-1. Lag en branch fra `dev` (`main` er produksjon). Push til `dev` og pull requests får forhåndsvisning, se [docs/deploy.md](docs/deploy.md#forhåndsvisning-dev).
+1. Jobb mot `main`, som er produksjon og deployes ved push (se [docs/deploy.md](docs/deploy.md)). Kjør `pnpm verify` og `pnpm build` først.
 2. Gjør endringen i små, logiske commits med norske meldinger.
 3. Kjør `pnpm verify` (typesjekk, formatsjekk, quizsjekk og tester). Har du endret noe i `app/`, `src/` eller konfigurasjon, kjør også `pnpm build`.
 4. Endrer du oppførsel, ruter eller kommandoer, oppdater [README.md](README.md) og relevant fil i [docs/](docs/).
-5. Åpne en pull request **mot `dev`** (aldri `main`). Den får en egen forhåndsvisning på `https://<gren>.fremtind-games-preview.pages.dev`, og lenken legges som kommentar i PR-en. Malen i `.github/pull_request_template.md` fylles ut automatisk. Legg ved skjermbilde hvis UI er endret.
+5. Åpne en pull request mot `main`. Malen i `.github/pull_request_template.md` fylles ut automatisk. Legg ved skjermbilde hvis UI er endret.
 
 `pnpm format` retter formateringsfeil (Prettier, 4 mellomrom).
 

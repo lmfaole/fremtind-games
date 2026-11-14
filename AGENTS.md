@@ -76,8 +76,8 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 
 ## Regler
 
-- Jobb mot `dev`, ikke `main`. `main` er produksjon (deployes til GitHub Pages) og oppdateres bare ved at `dev` slås sammen i den. Push til `dev` gir forhåndsvisning på Cloudflare Pages, se [docs/deploy.md](docs/deploy.md#forhåndsvisning-dev).
-- Ikke lag pull request uten at brukeren ber om det. Når du lager en, skal den **alltid** ha `dev` som base, aldri `main`. Unntaket er utrulling til produksjon: `dev` → `main`, og bare når brukeren ber om det. Hver PR mot `dev` får egen forhåndsvisning (`https://<gren>.fremtind-games-preview.pages.dev`, lenken legges som kommentar i PR-en). Ikke push direkte til `main`. `guard.yml` feiler PR-er mot `main` som ikke kommer fra `dev`.
+- Jobb direkte mot `main`. `main` er produksjon og deployes til GitHub Pages ved push. Det finnes ingen `dev`-gren og ingen forhåndsvisning.
+- Ikke lag pull request uten at brukeren ber om det.
 - Små, logiske commits, én endring per commit.
 - Endres oppførsel, ruter eller kommandoer: oppdater [README.md](README.md) (og relevant fil i `docs/`) i samme commit.
 - Kjør `pnpm verify` før commit, og `pnpm build` ved endringer i `app/`, `src/` eller konfigurasjon.

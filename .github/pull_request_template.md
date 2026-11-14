@@ -1,5 +1,3 @@
-<!-- Base må være `dev`. Bare dev → main (utrulling) går mot `main`. -->
-
 ## Beskrivelse
 
 <!-- Kort: hva og hvorfor? -->
