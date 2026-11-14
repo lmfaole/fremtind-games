@@ -22,17 +22,17 @@ pnpm dev
 
 ## Kommandoer
 
-| Kommando            | Beskrivelse                                                        |
-| ------------------- | ------------------------------------------------------------------ |
-| `pnpm dev`          | Utviklingsserver på http://localhost:3000                          |
-| `pnpm build`        | Statisk eksport til `out/`                                         |
-| `pnpm start`        | Next.js sin produksjonsserver (`next start`)                       |
-| `pnpm typecheck`    | Typesjekk uten å bygge                                             |
-| `pnpm format`       | Formater alle filer med Prettier                                   |
-| `pnpm format:check` | Sjekk formatering uten å endre filer                               |
-| `pnpm check`        | Validerer spørsmålene i `src/quiz/questions.ts`                    |
-| `pnpm verify`       | Typesjekk, formatsjekk og spørsmålssjekk. Kjør før du committer    |
-| `pnpm copy-fonts`   | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `dev`/`build`) |
+| Kommando            | Beskrivelse                                                                    |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `pnpm dev`          | Utviklingsserver på http://localhost:3000                                      |
+| `pnpm build`        | Statisk eksport til `out/`                                                     |
+| `pnpm start`        | Next.js sin produksjonsserver (`next start`)                                   |
+| `pnpm typecheck`    | Typesjekk uten å bygge                                                         |
+| `pnpm format`       | Formater alle filer med Prettier                                               |
+| `pnpm format:check` | Sjekk formatering uten å endre filer                                           |
+| `pnpm check`        | Validerer spørsmålene i `src/quiz/questions.ts`                                |
+| `pnpm verify`       | Typesjekk, formatsjekk, spørsmålssjekk og Worker-tester. Kjør før du committer |
+| `pnpm copy-fonts`   | Kopierer Jøkul-fonter til `public/fonts` (kjøres av `dev`/`build`)             |
 
 ## Dokumentasjon
 
@@ -41,3 +41,4 @@ pnpm dev
 - [docs/arkitektur.md](docs/arkitektur.md) — ruter, spørsmålstyper, seksjoner, lagring og sider
 - [docs/jokul.md](docs/jokul.md) — Jøkul-oppsett og fallgruver
 - [docs/deploy.md](docs/deploy.md) — GitHub Pages, DNS og `basePath`
+- [worker/README.md](worker/README.md) — Cloudflare Worker + D1 for anonym svarstatistikk (`api.fremtind.games`)

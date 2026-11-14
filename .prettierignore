@@ -3,3 +3,5 @@ node_modules
 out
 public
 pnpm-lock.yaml
+worker/.wrangler
+worker/worker-configuration.d.ts

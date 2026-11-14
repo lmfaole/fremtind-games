@@ -1,2 +1,8 @@
+packages:
+    - "."
+    - worker
+
 allowBuilds:
     "@parcel/watcher": false
+    esbuild: true
+    workerd: true
