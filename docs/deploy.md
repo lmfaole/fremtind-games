@@ -36,3 +36,22 @@ Se også [jokul.md](jokul.md) om fonter, som `prebuild` kopierer inn før bygget
 ## Statistikk-API
 
 `deploy.yml` bygger med `NEXT_PUBLIC_API_URL=https://api.fremtind.games`, som er Cloudflare Workeren i `worker/` (se [worker/README.md](../worker/README.md)). Fjernes variabelen, skjules statistikken og klienten sender ingenting. Workeren deployes manuelt med `pnpm deploy` i `worker/`, ikke av GitHub Actions.
+
+## Forhåndsvisning (dev)
+
+Arbeidsgrenen er `dev`. `main` er produksjon og oppdateres ved å slå `dev` sammen i `main`.
+
+`.github/workflows/preview.yml` bygger og publiserer til Cloudflare Pages (prosjektet `fremtind-games-preview`) ved push til `dev` og på pull requests:
+
+| Hva               | Adresse                                                           |
+| ----------------- | ----------------------------------------------------------------- |
+| `dev`             | `https://dev.fremtind-games-preview.pages.dev`                    |
+| Pull request/gren | `https://<gren>.fremtind-games-preview.pages.dev` (lenke i PR-en) |
+
+Engangsoppsett:
+
+1. Cloudflare → My Profile → API Tokens: lag et token med _Account · Cloudflare Pages · Edit_.
+2. GitHub → Settings → Secrets and variables → Actions: legg inn `CLOUDFLARE_API_TOKEN` og `CLOUDFLARE_ACCOUNT_ID`. Uten dem hopper workflowen over deploy (ingen feil).
+3. Valgfritt: koble `dev.fremtind.games` til prosjektet under Pages → Custom domains. Domenet ligger i Cloudflare, så DNS opprettes automatisk.
+
+Forhåndsvisningen bygges **uten** `NEXT_PUBLIC_API_URL` og `NEXT_PUBLIC_POSTHOG_TOKEN`, slik at testing ikke havner i produksjonsstatistikk, og sendes med `X-Robots-Tag: noindex`. Vil du teste statistikk eller push mot en egen Worker, lag en dev-Worker/D1-database og sett variablene i bygg-steget. Push-abonnement som tas i preview, må aldri peke på produksjons-Workeren.

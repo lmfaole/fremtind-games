@@ -16,7 +16,7 @@ pnpm dev
 
 ## Arbeidsflyt
 
-1. Lag en branch fra `main`.
+1. Lag en branch fra `dev` (`main` er produksjon). Push til `dev` og pull requests får forhåndsvisning, se [docs/deploy.md](docs/deploy.md#forhåndsvisning-dev).
 2. Gjør endringen i små, logiske commits med norske meldinger.
 3. Kjør `pnpm verify` (typesjekk, formatsjekk og spørsmålssjekk). Har du endret noe i `app/`, `src/` eller konfigurasjon, kjør også `pnpm build`.
 4. Endrer du oppførsel, ruter eller kommandoer, oppdater [README.md](README.md) og relevant fil i [docs/](docs/).
