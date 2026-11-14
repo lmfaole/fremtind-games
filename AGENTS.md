@@ -26,7 +26,8 @@ fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøku
 | `src/quiz/storage.ts`        | Lesing/skriving av `sessionStorage` (svar, lagnavn, medlemmer)            |
 | `src/analytics/`             | Valgfri statistikk: `sendAnswer`, `fetchStats`, `QuestionStats`           |
 | `src/brand.ts`               | Temavalg i `localStorage`                                                 |
-| `app/page.tsx`               | Forside                                                                   |
+| `app/page.tsx`               | Forside: liste over quizer som `Card`, med heldekkende bakgrunn           |
+| `src/quizzes.ts`             | Listen over quizer på forsiden (`quizzes`) og `readScore`                 |
 | `app/quiz/lag`, `medlemmer`  | Lagnavn og medlemmer                                                      |
 | `app/quiz/[step]/page.tsx`   | Server Component, `generateStaticParams`, videresender til `QuestionPage` |
 | `app/quiz/resultat/page.tsx` | Poeng, fasit og statistikk. Låser quizen når alt er besvart               |

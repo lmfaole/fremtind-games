@@ -63,9 +63,13 @@ Alt ligger i nettleseren, og alle lese- og skrivefunksjoner tåler at lagring er
 
 ## Forsiden
 
-Forsiden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller bannermal i storybooken, så `/` låner mekanismer fra `Skjermbilder`-malene: `data-theme="dark"` på seksjonen (som i footeren i `Bedriftsmarked`) slik at alle `--jkl-color-*` løses til mørke verdier via `light-dark()`, et sentrert `Card` med innholdet, og `Title as="h1" size="xl"` for overskriften. Seksjonen er `100svh`. Selve bakgrunnsbildet er vanlig CSS `background-image` med en lett skrim som demper det lyse himmelpartiet — Jøkuls `Image`-komponent tar bare `src`/`srcSet`/`placeholder`/`alt`/`className` og kan ikke dekke hele viewporten.
+Forsiden er en liste over alle quizer, definert i `src/quizzes.ts` (`quizzes`). Hver quiz vises som et Jøkul-`Card` (med `CardImage`, tittel og antall spørsmål) som lenker til quizen. Er quizen fullført i denne nettleseren (se «Bare én gjennomspilling»), vises «X av N riktige» og kortet lenker til resultatet i stedet. Poengene leses fra `localStorage` etter hydrering (`readScore`), så den statiske HTML-en aldri viser dem.
 
-`public/goteborg.jpg` er Gothia Towers i Göteborg, hentet fra [Unsplash](https://unsplash.com/photos/1614331358979-b83b729df836) og komprimert ned til 1500×2000.
+Den eneste quizen heter «Norge-Sverige del 1» og bor under `/quiz/…`. En ny quiz krever egne ruter, egne spørsmål og egen lagring av fullført resultat — `readCompleted` og `src/quiz/questions.ts` gjelder i dag én quiz.
+
+Siden er satt sammen for hånd. Jøkul har ingen forside-, hero- eller bannermal i storybooken, så `/` låner `data-theme="dark"` på seksjonen (som i footeren i `Bedriftsmarked`) slik at `--jkl-color-*` løses til mørke verdier via `light-dark()`. Tittelen ligger utenfor et kort og får derfor eksplisitt hvit farge. Bakgrunnen er `public/fjell.jpg` som vanlig CSS `background-image` (`fixed`, med skrim) — Jøkuls `Image` kan ikke dekke hele viewporten. `CardImage` får ikke egen `width`, siden den setter negativ margin etter kortets padding.
+
+`public/fjell.jpg` er et fjellsilhuett i solnedgang fra [Unsplash](https://unsplash.com/photos/gray-mountain-ridge-Pn-r8vL2nuM), skalert ned til 2400×1600. `public/goteborg.jpg` (Gothia Towers, Göteborg) er bildet på quizkortet, hentet fra [Unsplash](https://unsplash.com/photos/1614331358979-b83b729df836) og komprimert til 1500×2000.
 
 ## Bredde på inputfelt
 

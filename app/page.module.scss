@@ -1,30 +1,60 @@
-.hero {
+.page {
     position: relative;
+    box-sizing: border-box;
     min-height: 100svh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: var(--jkl-spacing-l);
+    // Reservefarge til bildet er lastet.
     background-color: #0e0d0c;
-    background-image: url("/goteborg.jpg");
+    background-image: url("/fjell.jpg");
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
 
-// Demper det svært lyse himmelpartiet i fotografiet, slik at kortet leses tydelig.
-.hero::before {
+// Demper bildet, slik at tittel og kort leses tydelig.
+.page::before {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background-color: rgb(14 13 12 / 0.35);
+    background-color: rgb(14 13 12 / 0.4);
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    max-width: 64rem;
+    margin: 0 auto;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--jkl-spacing-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .card {
-    position: relative;
-    width: 100%;
-    max-width: 32rem;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+// Ingen egen width: CardImage setter negativ margin og bredde etter kortets padding.
+.image {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.footer {
+    max-width: 20rem;
 }
 
 .link {
     color: inherit;
+}
+
+// Tittelen ligger rett på bildet, utenfor et kort, så fargen settes eksplisitt.
+.title {
+    color: #fff;
 }
