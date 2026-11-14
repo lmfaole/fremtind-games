@@ -24,6 +24,7 @@ fremtind.games: en statisk quiz (Next.js 15, `output: "export"`, React 19, Jøku
 | `src/quiz/questions.ts`      | `sections`, `allQuestions`, `questions`, `isCorrect`. Alt innhold bor her |
 | `src/quiz/QuestionPage.tsx`  | UI for ett spørsmål (klientkomponent)                                     |
 | `src/quiz/storage.ts`        | Lesing/skriving av `sessionStorage` (svar, lagnavn, medlemmer)            |
+| `src/analytics/`             | Valgfri statistikk: `sendAnswer`, `fetchStats`, `QuestionStats`           |
 | `src/brand.ts`               | Temavalg i `localStorage`                                                 |
 | `app/page.tsx`               | Forside                                                                   |
 | `app/quiz/lag`, `medlemmer`  | Lagnavn og medlemmer                                                      |
@@ -56,6 +57,7 @@ Detaljer og begrunnelser: [docs/jokul.md](docs/jokul.md) og [docs/arkitektur.md]
 - Ingen `basePath`. Nettstedet ligger på rota av `fremtind.games` (`public/CNAME`). Se [docs/deploy.md](docs/deploy.md) før du endrer det.
 - `public/fonts/` er gitignorert og genereres av `prebuild`. Ikke commit den, og ikke fjern hooken.
 - Svar lagres som `string[]` i `sessionStorage`, også for `choice`, `text` og `number`. `number`-svar sammenlignes numerisk i `isCorrect`.
+- Statistikk styres av `NEXT_PUBLIC_API_URL` ved bygg. Uten den skal alt i `src/analytics/` være no-op. Send aldri lagnavn, medlemmer eller fritekst-label.
 - Jøkul er låst til dist-tag `next`. Ikke bump den ved vanlige oppdateringer.
 
 ## Regler

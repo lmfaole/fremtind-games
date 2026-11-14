@@ -2,14 +2,14 @@
 
 En quiz om Norge og Sveriges popkultur og historie, som stiller ett spørsmål om gangen. Bygget med [Jøkul](https://jokul.fremtind.no) og Next.js, og publisert som statiske filer til GitHub Pages på [fremtind.games](https://fremtind.games).
 
-| Rute              | Innhold                                             |
-| ----------------- | --------------------------------------------------- |
-| `/`               | Forside med heldekkende bakgrunnsbilde fra Göteborg |
-| `/quiz`           | Omdirigerer til `/quiz/lag`                         |
-| `/quiz/lag`       | Lagnavn, før første spørsmål. Sendes med i SMS-en   |
-| `/quiz/medlemmer` | Opptil fire lagmedlemmer. Sendes med i SMS-en       |
-| `/quiz/1` … `/18` | Ett spørsmål per side, én side per spørsmål         |
-| `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene      |
+| Rute              | Innhold                                                                  |
+| ----------------- | ------------------------------------------------------------------------ |
+| `/`               | Forside med heldekkende bakgrunnsbilde fra Göteborg                      |
+| `/quiz`           | Omdirigerer til `/quiz/lag`                                              |
+| `/quiz/lag`       | Lagnavn, før første spørsmål. Sendes med i SMS-en                        |
+| `/quiz/medlemmer` | Opptil fire lagmedlemmer. Sendes med i SMS-en                            |
+| `/quiz/1` … `/18` | Ett spørsmål per side, én side per spørsmål                              |
+| `/quiz/resultat`  | Oppsummering, regnet ut fra de lagrede svarene. Viser valgfri statistikk |
 
 ## Kom i gang
 
@@ -19,6 +19,10 @@ Du trenger Node 22 og pnpm (`corepack enable` aktiverer riktig pnpm-versjon).
 pnpm install
 pnpm dev
 ```
+
+## Statistikk (valgfritt)
+
+Settes `NEXT_PUBLIC_API_URL` ved bygg (se `.env.example`), sendes anonyme svar til den adressen og resultatsiden viser hvor mange andre som svarte hva. Uten variabelen skjer ingen nettverkskall og ingenting vises. Se [docs/arkitektur.md](docs/arkitektur.md#statistikk).
 
 ## Kommandoer
 
