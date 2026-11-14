@@ -13,9 +13,9 @@ export default defineQuiz({
     slug: "norge-sverige-2",
     title: "Norge-Sverige del 2",
     description: "Mat, sport, natur og oppfinnelser: trivia fra begge sider av grensen.",
-    image: "/fjell.jpg",
-    imageAlt: "Fjell i solnedgang",
-    heroImage: "/fjell.jpg",
+    image: "/soloppgang.jpg",
+    imageAlt: "Silhuetter av fjell og tåke i oransje soloppgang",
+    heroImage: "/soloppgang.jpg",
     sections,
     questions: [
         // Mat og drikke
