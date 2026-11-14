@@ -31,17 +31,8 @@ const Home = () => {
 
     return (
         <div className={styles.page} data-theme="dark">
-            <header className={styles.header}>
-                <div className={styles.bar}>
-                    <Text className={styles.brand}>
-                        <strong>fremtind.games</strong>
-                    </Text>
-                </div>
-            </header>
             <main className={`${styles.bar} ${styles.main}`}>
-                <Title as="h1" size="xl" className={styles.title}>
-                    Velg en quiz
-                </Title>
+                <h1 className="jkl-sr-only">Fremtind games</h1>
                 <ul className={styles.list}>
                     {quizzes.map((quiz) => {
                         const score = scores[quiz.slug] ?? null;

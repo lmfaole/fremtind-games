@@ -21,22 +21,12 @@
     pointer-events: none;
 }
 
-// Header og footer har egen, tett bakgrunn, så teksten alltid leses uavhengig av bildet.
-.header,
+// Footer har egen, tett bakgrunn, så teksten alltid leses uavhengig av bildet.
 .footer {
     position: relative;
     background-color: rgb(14 13 12 / 0.92);
     backdrop-filter: blur(8px);
     color: #fff;
-}
-
-.header {
-    border-bottom: 1px solid rgb(255 255 255 / 0.12);
-    // Plass til statuslinjen i installert PWA (black-translucent).
-    padding-top: env(safe-area-inset-top);
-}
-
-.footer {
     border-top: 1px solid rgb(255 255 255 / 0.12);
     padding-bottom: env(safe-area-inset-bottom);
 }
@@ -49,17 +39,14 @@
     padding: var(--jkl-spacing-m) var(--jkl-spacing-l);
 }
 
-.brand {
-    color: #fff;
-}
-
 .main {
     position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: var(--jkl-spacing-l);
-    padding-top: var(--jkl-spacing-xl);
+    // Uten header må innholdet selv holde seg unna statuslinjen i installert app.
+    padding-top: calc(var(--jkl-spacing-xl) + env(safe-area-inset-top));
     padding-bottom: var(--jkl-spacing-xl);
 }
 
@@ -94,11 +81,6 @@
 
 .link {
     color: inherit;
-}
-
-// Tittelen ligger rett på bildet, utenfor et kort, så fargen settes eksplisitt.
-.title {
-    color: #fff;
 }
 
 // Quiz som ikke kan startes: dempet og uten lenke, så den ikke ser klikkbar ut.
