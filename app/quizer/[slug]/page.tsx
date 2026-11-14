@@ -1,11 +1,10 @@
 // Jøkul 6.1.0-next.7 har ingen "use client"-direktiver, så komponentene kan ikke
 // rendres i en Server Component.
 "use client";
-import { ButtonGroup } from "@fremtind/jokul/button-group";
+import { Button } from "@fremtind/jokul/button";
 import { Card } from "@fremtind/jokul/card";
 import { Flex } from "@fremtind/jokul/flex";
 import { Text, Title } from "@fremtind/jokul/typography";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { readScore } from "@/quiz/score";
 import { formatQuizTime, quizStatus, type QuizStatus } from "@/quiz/status";
@@ -23,7 +22,6 @@ interface State {
 // (åpningstid, fullført, påbegynt) finnes bare i nettleseren, så den leses etter hydrering og
 // den statiske HTML-en viser aldri en knapp som kan være feil.
 const QuizHome = () => {
-    const router = useRouter();
     const quiz = useQuiz();
     const [state, setState] = useState<State>();
 
@@ -35,11 +33,6 @@ const QuizHome = () => {
         });
     }, [quiz]);
 
-    // Vanlig sidelasting i stedet for klientnavigasjon: direkte lenker til disse sidene virker,
-    // mens knappene endte på 404 på fremtind.games. Årsaken er ikke funnet; dette omgår
-    // klientnavigasjonens datakall (`index.txt`).
-    const go = (href: string) => window.location.assign(href);
-
     const completed = state?.score != null;
     const canStart =
         state !== undefined && !completed && (state.status === "open" || state.started);
@@ -49,16 +42,11 @@ const QuizHome = () => {
         state === undefined
             ? undefined
             : completed
-              ? {
-                    type: "button" as const,
-                    children: "Se resultatet ditt",
-                    onClick: () => go(`/quizer/${quiz.slug}/resultat/`),
-                }
+              ? { href: `/quizer/${quiz.slug}/resultat/`, label: "Se resultatet ditt" }
               : canStart
                 ? {
-                      type: "button" as const,
-                      children: state.started ? "Fortsett quizen" : "Start quizen",
-                      onClick: () => go(`/quizer/${quiz.slug}/lag/`),
+                      href: `/quizer/${quiz.slug}/lag/`,
+                      label: state.started ? "Fortsett quizen" : "Start quizen",
                   }
                 : undefined;
 
@@ -94,24 +82,23 @@ const QuizHome = () => {
                         !canStart &&
                         state.status === "closed" &&
                         quiz.closes && <Text>Stengte {formatQuizTime(quiz.closes)}.</Text>}
-                    <ButtonGroup
-                        mainAction={
-                            primary ?? {
-                                type: "button",
-                                children: "Alle quizer",
-                                onClick: () => router.push("/"),
-                            }
-                        }
-                        secondaryAction={
-                            primary
-                                ? {
-                                      type: "button",
-                                      children: "Alle quizer",
-                                      onClick: () => router.push("/"),
-                                  }
-                                : undefined
-                        }
-                    />
+                    {/* Vanlige lenker, ikke knapper med router.push: de virker uten JavaScript og
+                        gir riktig oppførsel for åpne-i-ny-fane. Samme layout som ButtonGroup. */}
+                    <Flex
+                        className="jkl-button-group"
+                        direction="column"
+                        alignItems="center"
+                        gap="8"
+                    >
+                        {primary && (
+                            <Button as="a" href={primary.href} variant="primary">
+                                {primary.label}
+                            </Button>
+                        )}
+                        <Button as="a" href="/" variant={primary ? "ghost" : "primary"}>
+                            Alle quizer
+                        </Button>
+                    </Flex>
                 </Flex>
             </Card>
         </main>
