@@ -4,7 +4,7 @@ Instruksjoner for KI-agenter og andre som jobber i repoet. Mer detaljer: [CONTRI
 
 ## Hva er dette
 
-fremtind.games: statiske quizer (Next.js 15, `output: "export"`, React 19, Jøkul, SCSS) om Norge og Sveriges popkultur og historie. Hver quiz har egne URL-er under `/quizer/<slug>/`, med ett spørsmål per side. Svar lagres i nettleseren, og hver quiz kan bare tas én gang per nettleser. En quiz kan ha en åpningstid. Språk i UI og kode-kommentarer er norsk. Pakkebehandler: pnpm, Node 22.
+fremtind.games: statiske quizer (Next.js 16, `output: "export"`, React 19, Jøkul, SCSS) om Norge og Sveriges popkultur og historie. Hver quiz har egne URL-er under `/quizer/<slug>/`, med ett spørsmål per side. Svar lagres i nettleseren, og hver quiz kan bare tas én gang per nettleser. En quiz kan ha en åpningstid. Språk i UI og kode-kommentarer er norsk. Pakkebehandler: pnpm, Node 22.
 
 ## Kommandoer
 
