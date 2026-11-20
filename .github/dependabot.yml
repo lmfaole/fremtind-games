@@ -11,6 +11,9 @@ updates:
           # @fremtind/jokul er låst til dist-tag `next` med vilje
           - dependency-name: "@fremtind/jokul"
             update-types: ["version-update:semver-major", "version-update:semver-minor"]
+          # Typene følger Node-versjonen CI og Pages bruker (22), ikke nyeste Node
+          - dependency-name: "@types/node"
+            update-types: ["version-update:semver-major"]
     - package-ecosystem: github-actions
       directory: /
       schedule:
