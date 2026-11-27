@@ -23,7 +23,7 @@
     "dependencies": {
         "@fremtind/jokul": "next",
         "next": "^16.4.6",
-        "posthog-js": "^1.451.2",
+        "posthog-js": "^1.454.2",
         "react": "^19.1.0",
         "react-dom": "^19.1.0"
     },
